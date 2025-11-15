@@ -43,7 +43,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 {
 	try
 	{
-		double* p = new double[2]{ 0.0, 0.0 };
+		double* p = new double[3]{ 0.0, 0.0, 0.0};
 
 		// pomocnicza funkcja f(x)
 		auto f = [&](double x) -> double
@@ -127,7 +127,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 			p[0] = x_ip1;   // x^(i+1)
 			p[1] = x_im1;   // x^(i-1)
 		}
-
+		p[2] = (double)f_calls;
 		return p;
 	}
 	catch (std::string ex_info)
