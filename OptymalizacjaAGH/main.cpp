@@ -9,6 +9,7 @@ Data ostatniej modyfikacji: 30.09.2025
 *********************************************/
 
 #include"opt_alg.h"
+#include"ctime"
 
 void lab0();
 void lab1();
@@ -70,10 +71,15 @@ void lab1()
 {
 	matrix ud1, ud2;   // macierze pomocnicze
 
-	double x0 = 0.0;   // wyjsciowa dziedzina [-100,100]
+	std::srand(std::time(0));
+	//double x0 = 0.0;   // wyjsciowa dziedzina [-100,100]
+	double x0 = (double)(rand() % 200 - 100); //losowa liczba pomiedzy -100 a 100
+
+	std::cout << "Losowy punkt startowy: " << x0 << endl;
+
 	double d = 1.0;    // rozmiar kroku wyjsciowego
-	double alpha = 2.0; // fabryka ekspansji
-	int Nmax = 1000;   // limit wywylan espansji
+	double alpha = 2.0; // wspolczynnik ekspansji
+	int Nmax = 1000;   // maksymalna liczba wywolan espansji
 
 	double* interval = expansion(ff1T, x0, d, alpha, Nmax, ud1, ud2);
 

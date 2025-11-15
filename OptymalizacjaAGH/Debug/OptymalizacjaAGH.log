@@ -1,7 +1,3 @@
 ﻿  main.cpp
-  ode_solver.cpp
-  opt_alg.cpp
-  solution.cpp
-  user_funs.cpp
-  Generowanie kodu...
+E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(74,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
   OptymalizacjaAGH.vcxproj -> E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\Debug\OptymalizacjaAGH.exe
