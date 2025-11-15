@@ -37,20 +37,105 @@ solution MC(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, do
 	}
 }
 
-double* expansion(matrix(*ff)(matrix, matrix, matrix), double x0, double d, double alpha, int Nmax, matrix ud1, matrix ud2)
+double* expansion(matrix(*ff)(matrix, matrix, matrix),
+	double x0, double d, double alpha, int Nmax,
+	matrix ud1, matrix ud2)
 {
 	try
 	{
-		double* p = new double[2] { 0, 0 };
-		//Tu wpisz kod funkcji
+		double* p = new double[2]{ 0.0, 0.0 };
+
+		// pomocnicza funkcja f(x)
+		auto f = [&](double x) -> double
+		{
+			matrix X(1, 1);
+			X(0, 0) = x;
+			matrix Y = ff(X, ud1, ud2);
+			return Y(0, 0);
+		};
+
+		int f_calls = 0;
+
+		int i = 0;
+		double x_0 = x0;          // x^(0)
+		double x1 = x0 + d;      // x^(1)
+
+		double fx0 = f(x_0);  ++f_calls;
+		double fx1 = f(x1);   ++f_calls;
+
+		// linie 3–4
+		if (fx1 == fx0)
+		{
+			p[0] = x_0;
+			p[1] = x1;
+			return p;
+		}
+
+		// linie 6–12
+		if (fx1 > fx0)
+		{
+			d = -d;
+			x1 = x0 + d;
+			fx1 = f(x1);  ++f_calls;
+
+			if (fx1 >= fx0)
+			{
+				p[0] = x1;
+				p[1] = x0 - d;
+				return p;
+			}
+		}
+
+		// mamy: x^(0) = x_0, x^(1) = x1
+		double x_im1 = x_0;   // x^(i-1)
+		double x_i = x1;    // x^(i)
+		double x_ip1;         // x^(i+1)
+
+		double f_im1 = fx0;
+		double f_i = fx1;
+		double f_ip1;
+
+		// linie 13–19  (pêtla repeat ... until)
+		while (true)
+		{
+			if (f_calls > Nmax)
+			{
+				delete[] p;
+				throw std::string("expansion: przekroczono maksymalna liczbe wywolan funkcji");
+			}
+
+			i = i + 1;
+			x_ip1 = x0 + std::pow(alpha, i) * d;   // x^(i+1)
+			f_ip1 = f(x_ip1);  ++f_calls;
+
+			if (f_i <= f_ip1)
+				break;
+
+			// przesuwamy indeksy: (i-1) <- i, i <- i+1
+			x_im1 = x_i;   f_im1 = f_i;
+			x_i = x_ip1; f_i = f_ip1;
+		}
+
+		// linie 20–23 – zwracamy przedzia³ zawieraj¹cy minimum
+		if (d > 0.0)
+		{
+			p[0] = x_im1;   // x^(i-1)
+			p[1] = x_ip1;   // x^(i+1)
+		}
+		else
+		{
+			p[0] = x_ip1;   // x^(i+1)
+			p[1] = x_im1;   // x^(i-1)
+		}
 
 		return p;
 	}
-	catch (string ex_info)
+	catch (std::string ex_info)
 	{
 		throw ("double* expansion(...):\n" + ex_info);
 	}
 }
+
 
 solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double epsilon, matrix ud1, matrix ud2)
 {
