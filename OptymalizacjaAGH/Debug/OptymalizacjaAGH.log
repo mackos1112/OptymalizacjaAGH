@@ -1,5 +1,4 @@
 ﻿  main.cpp
-  matrix.cpp
   ode_solver.cpp
   opt_alg.cpp
   solution.cpp

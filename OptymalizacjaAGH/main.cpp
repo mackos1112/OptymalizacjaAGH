@@ -22,7 +22,7 @@ int main()
 {
 	try
 	{
-		lab0();
+		lab1();
 	}
 	catch (string EX_INFO)
 	{
@@ -68,6 +68,18 @@ void lab0()
 
 void lab1()
 {
+	matrix ud1, ud2;   // macierze pomocnicze
+
+	double x0 = 0.0;   // wyjsciowa dziedzina [-100,100]
+	double d = 1.0;    // rozmiar kroku wyjsciowego
+	double alpha = 2.0; // fabryka ekspansji
+	int Nmax = 1000;   // limit wywylan espansji
+
+	double* interval = expansion(ff1T, x0, d, alpha, Nmax, ud1, ud2);
+
+	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "]" << std::endl;
+
+
 
 }
 
