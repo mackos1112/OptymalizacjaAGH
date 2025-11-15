@@ -68,17 +68,17 @@ void lab0()
 
 void lab1()
 {
-	//Funkcja testowa
-	double epsilon = 1e-2;									// dok³adnoœæ
-	int Nmax = 10000;										// maksymalna liczba wywo³añ funkcji celu
-	matrix lb(2, 1, -5), ub(2, 1, 5),						// dolne oraz górne ograniczenie
-		a(2, 1);											// dok³adne rozwi¹zanie optymalne
-	solution opt;											// rozwi¹zanie optymalne znalezione przez algorytm
-	a(0) = -1;
-	a(1) = 2;
-	opt = MC(ff0T, 2, lb, ub, epsilon, Nmax, a);			// wywo³anie procedury optymalizacji
-	cout << opt << endl << endl;							// wypisanie wyniku
-	solution::clear_calls();								// wyzerowanie liczników
+	matrix ud1, ud2;   // macierze pomocnicze
+
+	double x0 = 0.0;   // wyjsciowa dziedzina [-100,100]
+	double d = 1.0;    // rozmiar kroku wyjsciowego
+	double alpha = 2.0; // fabryka ekspansji
+	int Nmax = 1000;   // limit wywylan espansji
+
+	double* interval = expansion(ff1T, x0, d, alpha, Nmax, ud1, ud2);
+
+	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "]" << std::endl;
+
 
 
 }
