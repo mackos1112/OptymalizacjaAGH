@@ -1,3 +1,6 @@
-﻿  main.cpp
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(74,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+﻿  opt_alg.cpp
+E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(77,17): warning C4566: znak przedstawiony przez nazwę zawierającą znaki uniwersalne "\u2192" nie może być przedstawiony w bieżącej stronie kodowej (1250)
+E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(96,18): warning C4566: znak przedstawiony przez nazwę zawierającą znaki uniwersalne "\u2192" nie może być przedstawiony w bieżącej stronie kodowej (1250)
+  user_funs.cpp
+  Generowanie kodu...
   OptymalizacjaAGH.vcxproj -> E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\Debug\OptymalizacjaAGH.exe

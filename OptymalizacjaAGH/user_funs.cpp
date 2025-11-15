@@ -43,7 +43,7 @@ matrix ff1T(matrix x, matrix ud1, matrix ud2)
 
 	// obliczamy wartoœæ funkcji:
 	// f(x) = -cos(0.1*x) * exp((-0.1*x - 2*pi)^2) + 0.002*(0.1*x)^2
-	double fx = -cos(0.1 * xv) * exp(pow(-0.1 * xv - 2 * 3.14, 2))
+	double fx = -cos(0.1 * xv) * exp(-pow(0.1 * xv - 2 * 3.14, 2))
 		+ 0.002 * pow(0.1 * xv, 2);
 
 	y = matrix(1, 1);   // wynik jako macierz 1x1
