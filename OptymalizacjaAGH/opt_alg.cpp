@@ -156,10 +156,13 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 	try
 	{
 		solution Xopt;
+		int f_calls = 0;
+
 		// helper f(x)
 		auto f = [&](double x) {
 			matrix X(1,1);
 			X(0,0) = x;
+			f_calls++;
 			return ff(X, ud1, ud2)(0,0);
 			};
 
@@ -189,7 +192,7 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 
 		Xopt.x = c_i;
 		Xopt.y = f(c_i);
-
+		Xopt.f_calls = f_calls;
 
 		return Xopt;
 	}
