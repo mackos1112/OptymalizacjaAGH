@@ -91,7 +91,7 @@ void lab1()
 		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] << ";";
 
 		solution sol1 = fib(ff1T, interval[0], interval[1], 1e-6, ud1, ud2);
-		Sout << sol1.x << ";" << sol1.y << ";" << ";";
+		Sout << sol1.x << ";" << sol1.y << ";" << sol1.f_calls << ";";
 		//double* interval = lagrange(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
 		//Sout << x0 << ";" << interval[0] << ";" << interval[1] << ";" << interval[2] << "\n";
 	}
