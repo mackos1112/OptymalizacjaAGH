@@ -156,7 +156,40 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 	try
 	{
 		solution Xopt;
-		//Tu wpisz kod funkcji
+		// helper f(x)
+		auto f = [&](double x) {
+			matrix X(1,1);
+			X(0,0) = x;
+			return ff(X, ud1, ud2)(0,0);
+			};
+
+		// build fibonacci seq until φ_k > (b-a)/ε
+		std::vector<long long> F = {1,1};
+		while (F.back() < (b - a) / epsilon)
+			F.push_back(F[F.size()-1] + F[F.size()-2]);
+		int k = F.size() - 1;
+
+		double a_i = a;
+		double b_i = b;
+
+		double c_i = b_i - (double)F[k-1] / F[k] * (b_i - a_i);
+		double d_i = a_i + b_i - c_i;
+
+		for (int i = 0; i < k-2; i++)
+		{
+			if (f(c_i) < f(d_i)) {
+				b_i = d_i;
+			} else {
+				a_i = c_i;
+			}
+
+			c_i = b_i - (double)F[k-i-2] / F[k-i-1] * (b_i - a_i);
+			d_i = a_i + b_i - c_i;
+		}
+
+		Xopt.x = c_i;
+		Xopt.y = f(c_i);
+
 
 		return Xopt;
 	}
