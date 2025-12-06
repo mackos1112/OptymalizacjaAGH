@@ -88,7 +88,11 @@ void lab1()
 		double x0 = (double)( (double)(rand() % 20000)/100 - 100); //losowa liczba pomiedzy -100 a 100
 
 		double* interval = expansion(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
-		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] <<"\n";
+		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] << ";";
+		//double* interval = fibonacci(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
+		//Sout << x0 << ";" << interval[0] << ";" << interval[1] << ";" << interval[2]<< ";";
+		//double* interval = lagrange(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
+		//Sout << x0 << ";" << interval[0] << ";" << interval[1] << ";" << interval[2] << "\n";
 	}
 	Sout.close();
 }
