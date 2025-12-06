@@ -45,7 +45,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 {
 	try
 	{
-		double* p = new double[2]{ 0.0, 0.0 };
+		double* p = new double[3]{ 0.0, 0.0, 0.0 };
 
 		// pomocnicza funkcja celu f(x)
 		auto f = [&](double x) -> double {
@@ -76,6 +76,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 			if (DEBUG)
 			std::cout << "[DEBUG] f(x1) == f(x0) → zwracam [" << p[0] << ", " << p[1] << "]" << std::endl;
 			
+			p[2] = f_calls;
 			return p;
 		}
 
@@ -95,6 +96,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 				if (DEBUG)
 				std::cout << "[DEBUG] f(x1) >= f(x0) → zwracam [" << p[0] << ", " << p[1] << "]" << std::endl;
 				
+				p[2] = f_calls;
 				return p;
 			}
 		}
@@ -140,6 +142,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 		if (DEBUG)
 		std::cout << "[DEBUG] Zwracam przedział [" << p[0] << ", " << p[1] << "]" << std::endl;
 
+		p[2] = f_calls;
 		return p;
 	}
 	catch (std::string ex_info)

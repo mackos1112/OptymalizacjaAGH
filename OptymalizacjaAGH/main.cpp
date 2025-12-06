@@ -84,7 +84,7 @@ void lab1()
 
 	double* interval = expansion(ff1T, x0, d, alpha, Nmax, ud1, ud2);
 
-	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "]" << std::endl;
+	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "] f_calls: " << interval[2] << std::endl;
 
 
 
