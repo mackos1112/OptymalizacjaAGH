@@ -74,7 +74,8 @@ void lab1()
 
 	std::srand(std::time(0));
 	//double x0 = 62.0;   // wyjsciowa dziedzina [-100,100]
-	
+	double a = -100.0;
+	double b = 100.0;
 	double d = 1.0;    // rozmiar kroku wyjsciowego
 	//double alpha = 1.1; // wspolczynnik ekspansji
 	double* alphat = new double[3]{1.1, 1.5, 2.0};
@@ -92,9 +93,9 @@ void lab1()
 		double* interval = expansion(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
 		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] << ";";
 
-		solution sol1 = fib(ff1T, interval[0], interval[1], epsilon, ud1, ud2);
+		solution sol1 = fib(ff1T, a, b, epsilon, ud1, ud2);
 		Sout << sol1.x << ";" << sol1.y << ";" << sol1.f_calls << ";" << sol1.flag << ";";
-		solution sol2 = lag(ff1T, x0, d, epsilon, gamma, Nmax, ud1, ud2);
+		solution sol2 = lag(ff1T, a, b, epsilon, gamma, Nmax, ud1, ud2);
 		Sout << sol2.x << ";" << sol2.y << ";" << sol2.f_calls << ";" << sol2.flag << "\n";
 	}
 	Sout.close();
