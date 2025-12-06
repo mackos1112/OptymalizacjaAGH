@@ -207,7 +207,7 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 
 }
 
-solution lagrange(matrix(*ff)(matrix, matrix, matrix), double a, double b, double epsilon, double gamma, int Nmax, matrix ud1, matrix ud2)
+solution lag(matrix(*ff)(matrix, matrix, matrix), double a, double b, double epsilon, double gamma, int Nmax, matrix ud1, matrix ud2)
 {
 	try
 	{

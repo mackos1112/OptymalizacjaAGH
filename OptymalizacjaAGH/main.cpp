@@ -79,6 +79,8 @@ void lab1()
 	//double alpha = 1.1; // wspolczynnik ekspansji
 	double* alphat = new double[3]{1.1, 1.5, 2.0};
 	int Nmax = 1000;   // maksymalna liczba wywolan espansji
+	double epsilon = 1e-6; // dokladnosc dla metod lokalnych
+	double gamma = 0.618; // wspolczynnik zlagrania dla metody Lagrange'a
 
 	ofstream Sout("ekspansja_lab1.csv");// definiujemy strumieñ do pliku .csv
 
@@ -90,10 +92,10 @@ void lab1()
 		double* interval = expansion(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
 		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] << ";";
 
-		solution sol1 = fib(ff1T, interval[0], interval[1], 1e-6, ud1, ud2);
+		solution sol1 = fib(ff1T, interval[0], interval[1], epsilon, ud1, ud2);
 		Sout << sol1.x << ";" << sol1.y << ";" << sol1.f_calls << ";" << sol1.flag << ";";
-		//double* interval = lagrange(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
-		//Sout << x0 << ";" << interval[0] << ";" << interval[1] << ";" << interval[2] << "\n";
+		solution sol2 = lag(ff1T, x0, d, epsilon, gamma, Nmax, ud1, ud2);
+		Sout << sol2.x << ";" << sol2.y << ";" << sol2.f_calls << ";" << sol2.flag << "\n";
 	}
 	Sout.close();
 }
