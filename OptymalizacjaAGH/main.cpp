@@ -80,7 +80,7 @@ void lab1()
 	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "]" << std::endl;
 
 
-	ofstream Sout("E:/USERS/krygrze2/source/repos/OptymalizacjaAGH/OptymalizacjaAGH/ekspansja_lab1.csv");					// definiujemy strumieñ do pliku .csv
+	ofstream Sout("ekspansja_lab1.csv");// definiujemy strumieñ do pliku .csv
 	for (int i = 0; i < 100; i++)
 	{
 		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] <<"\n";

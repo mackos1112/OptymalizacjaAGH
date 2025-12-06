@@ -1,3 +1,5 @@
 Debug/
 OptymalizacjaAGH/Debug/
 .vs/
+*.csv
+*.xls
