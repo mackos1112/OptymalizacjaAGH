@@ -9,6 +9,7 @@ Data ostatniej modyfikacji: 30.09.2025
 *********************************************/
 
 #include"opt_alg.h"
+#include"ctime"
 
 void lab0();
 void lab1();
@@ -66,18 +67,24 @@ void lab0()
 	Y[1].~matrix();
 }
 
+
 void lab1()
 {
 	matrix ud1, ud2;   // macierze pomocnicze
 
-	double x0 = 0.0;   // wyjsciowa dziedzina [-100,100]
+	std::srand(std::time(0));
+	//double x0 = 62.0;   // wyjsciowa dziedzina [-100,100]
+	double x0 = (double)( rand() % 200 - 100 ); //losowa liczba pomiedzy -100 a 100
+
+	std::cout << "Losowy punkt startowy: " << x0 << endl;
+
 	double d = 1.0;    // rozmiar kroku wyjsciowego
-	double alpha = 2.0; // fabryka ekspansji
-	int Nmax = 1000;   // limit wywylan espansji
+	double alpha = 1.1; // wspolczynnik ekspansji
+	int Nmax = 1000;   // maksymalna liczba wywolan espansji
 
 	double* interval = expansion(ff1T, x0, d, alpha, Nmax, ud1, ud2);
 
-	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "]" << std::endl;
+	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "] f_calls: " << interval[2] << std::endl;
 
 
 	ofstream Sout("ekspansja_lab1.csv");// definiujemy strumieñ do pliku .csv

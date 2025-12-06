@@ -1,0 +1,7 @@
+﻿  main.cpp
+C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(75,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  opt_alg.cpp
+C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(77,17): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1250)
+C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(97,18): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1250)
+  Generating Code...
+  OptymalizacjaAGH.vcxproj -> C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
