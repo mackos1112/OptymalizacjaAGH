@@ -1,31 +1,33 @@
-#include"opt_alg.h"
+Ôªø#include"opt_alg.h"
+
+#define DEBUG false
 
 solution MC(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, double epsilon, int Nmax, matrix ud1, matrix ud2)
 {
-	// Zmienne wejúciowe:
-	// ff - wskaünik do funkcji celu
+	// Zmienne wej≈õciowe:
+	// ff - wska≈∫nik do funkcji celu
 	// N - liczba zmiennych funkcji celu
-	// lb, ub - dolne i gÛrne ograniczenie
-	// epslion - zak≥πdana dok≥adnoúÊ rozwiπzania
-	// Nmax - maksymalna liczba wywo≥aÒ funkcji celu
+	// lb, ub - dolne i g√≥rne ograniczenie
+	// epslion - zak≈ÇƒÖdana dok≈Çadno≈õƒá rozwiƒÖzania
+	// Nmax - maksymalna liczba wywo≈Ça≈Ñ funkcji celu
 	// ud1, ud2 - user data
 	try
 	{
 		solution Xopt;
 		while (true)
 		{
-			Xopt = rand_mat(N);									// losujemy macierz Nx1 stosujπc rozk≥ad jednostajny na przedziale [0,1]
+			Xopt = rand_mat(N);									// losujemy macierz Nx1 stosujƒÖc rozk≈Çad jednostajny na przedziale [0,1]
 			for (int i = 0; i < N; ++i)
-				Xopt.x(i) = (ub(i) - lb(i)) * Xopt.x(i) + lb(i);// przeskalowywujemy rozwiπzanie do przedzia≥u [lb, ub]
-			Xopt.fit_fun(ff, ud1, ud2);							// obliczmy wartoúÊ funkcji celu
+				Xopt.x(i) = (ub(i) - lb(i)) * Xopt.x(i) + lb(i);// przeskalowywujemy rozwiƒÖzanie do przedzia≈Çu [lb, ub]
+			Xopt.fit_fun(ff, ud1, ud2);							// obliczmy warto≈õƒá funkcji celu
 			if (Xopt.y < epsilon)								// sprawdzmy 1. kryterium stopu
 			{
-				Xopt.flag = 1;									// flaga = 1 ozancza znalezienie rozwiπzanie z zadanπ dok≥adnoúciπ
+				Xopt.flag = 1;									// flaga = 1 ozancza znalezienie rozwiƒÖzanie z zadanƒÖ dok≈Çadno≈õciƒÖ
 				break;
 			}
 			if (solution::f_calls > Nmax)						// sprawdzmy 2. kryterium stopu
 			{
-				Xopt.flag = 0;									// flaga = 0 ozancza przekroczenie maksymalne liczby wywo≥aÒ funkcji celu
+				Xopt.flag = 0;									// flaga = 0 ozancza przekroczenie maksymalne liczby wywo≈Ça≈Ñ funkcji celu
 				break;
 			}
 		}
@@ -43,91 +45,104 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 {
 	try
 	{
-		double* p = new double[2]{ 0.0, 0.0 };
+		double* p = new double[3]{0.0, 0.0, 0.0};
 
-		// pomocnicza funkcja f(x)
-		auto f = [&](double x) -> double
-		{
+		// pomocnicza funkcja celu f(x)
+		auto f = [&](double x) -> double {
 			matrix X(1, 1);
 			X(0, 0) = x;
 			matrix Y = ff(X, ud1, ud2);
 			return Y(0, 0);
 		};
 
-		int f_calls = 0;
+		int f_calls = 0;                          // licznik wywo≈Ça≈Ñ funkcji celu
 
-		int i = 0;
-		double x_0 = x0;          // x^(0)
-		double x1 = x0 + d;      // x^(1)
+		// punkty startowe
+		double x0_curr = x0;                      // x^(0)
+		double x1_curr = x0 + d;                  // x^(1)
 
-		double fx0 = f(x_0);  ++f_calls;
-		double fx1 = f(x1);   ++f_calls;
+		double f0 = f(x0_curr); ++f_calls;        // f(x^(0))
+		double f1 = f(x1_curr); ++f_calls;        // f(x^(1))
 
-		// linie 3ñ4
-		if (fx1 == fx0)
-		{
-			p[0] = x_0;
-			p[1] = x1;
+		if( DEBUG )
+		std::cout << "[DEBUG] i=0, x0=" << x0_curr << " f(x0)=" << f0
+			<< ", x1=" << x1_curr << " f(x1)=" << f1 << std::endl;
+
+		// przypadek: warto≈õci r√≥wne
+		if (std::abs(f1 - f0) < 1e-12) {
+			p[0] = x0_curr;
+			p[1] = x1_curr;
+
+			if (DEBUG)
+			std::cout << "[DEBUG] f(x1) == f(x0) ‚Üí zwracam [" << p[0] << ", " << p[1] << "]" << std::endl;
+			
+			p[2] = f_calls;
 			return p;
 		}
 
-		// linie 6ñ12
-		if (fx1 > fx0)
-		{
+		// przypadek: funkcja ro≈õnie ‚Üí zmiana kierunku
+		if (f1 > f0) {
 			d = -d;
-			x1 = x0 + d;
-			fx1 = f(x1);  ++f_calls;
+			x1_curr = x0 + d;
+			f1 = f(x1_curr); ++f_calls;
 
-			if (fx1 >= fx0)
-			{
-				p[0] = x1;
-				p[1] = x0 - d;
+			if (DEBUG)
+			std::cout << "[DEBUG] f(x1) > f(x0), zmiana kierunku: x1=" << x1_curr << " f(x1)=" << f1 << std::endl;
+
+			if (f1 >= f0) {
+				p[0] = x1_curr;
+				p[1] = x0 + d;   // poprawka zgodna z pseudokodem
+
+				if (DEBUG)
+				std::cout << "[DEBUG] f(x1) >= f(x0) ‚Üí zwracam [" << p[0] << ", " << p[1] << "]" << std::endl;
+				
+				p[2] = f_calls;
 				return p;
 			}
 		}
 
-		// mamy: x^(0) = x_0, x^(1) = x1
-		double x_im1 = x_0;   // x^(i-1)
-		double x_i = x1;    // x^(i)
-		double x_ip1;         // x^(i+1)
-
-		double f_im1 = fx0;
-		double f_i = fx1;
-		double f_ip1;
-
-		// linie 13ñ19  (pÍtla repeat ... until)
-		while (true)
-		{
-			if (f_calls > Nmax)
-			{
+		// pƒôtla ekspansji
+		int i = 0;
+		double x_next, f_next;
+		while (true) {
+			if (f_calls > Nmax) {
 				delete[] p;
-				throw std::string("expansion: przekroczono maksymalna liczbe wywolan funkcji");
+				throw std::string("expansion: przekroczono maksymalnƒÖ liczbƒô wywo≈Ça≈Ñ funkcji celu");
 			}
 
-			i = i + 1;
-			x_ip1 = x0 + std::pow(alpha, i) * d;   // x^(i+1)
-			f_ip1 = f(x_ip1);  ++f_calls;
+			i++;
+			x_next = x0 + std::pow(alpha, i) * d; // x^(i+1) = x^(0) + Œ±^i * d
+			f_next = f(x_next); ++f_calls;
 
-			if (f_i <= f_ip1)
+			if (DEBUG)
+			std::cout << "[DEBUG] i=" << i << ", x_next=" << x_next << " f(x_next)=" << f_next << std::endl;
+
+			if (f1 <= f_next) {
+				if (DEBUG)
+				std::cout << "[DEBUG] warunek stopu: f(x(i)) <= f(x(i+1))" << std::endl;
+				
 				break;
+			}
 
-			// przesuwamy indeksy: (i-1) <- i, i <- i+1
-			x_im1 = x_i;   f_im1 = f_i;
-			x_i = x_ip1; f_i = f_ip1;
+			// przesuwamy okno: (i-1) ‚Üê i
+			x0_curr = x1_curr; f0 = f1;
+			x1_curr = x_next; f1 = f_next;
 		}
 
-		// linie 20ñ23 ñ zwracamy przedzia≥ zawierajπcy minimum
-		if (d > 0.0)
-		{
-			p[0] = x_im1;   // x^(i-1)
-			p[1] = x_ip1;   // x^(i+1)
+		// zwracamy przedzia≈Ç zawierajƒÖcy minimum
+		if (d > 0.0) {
+			p[0] = x0_curr;   // x^(i-1)
+			p[1] = x_next;    // x^(i+1)
 		}
-		else
-		{
-			p[0] = x_ip1;   // x^(i+1)
-			p[1] = x_im1;   // x^(i-1)
+		else {
+			p[0] = x_next;    // x^(i+1)
+			p[1] = x0_curr;   // x^(i-1)
 		}
 
+		if (DEBUG)
+		std::cout << "[DEBUG] Zwracam przedzia≈Ç [" << p[0] << ", " << p[1] << "]" << std::endl;
+
+		p[2] = f_calls;
 		return p;
 	}
 	catch (std::string ex_info)
@@ -136,13 +151,57 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 	}
 }
 
-
 solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double epsilon, matrix ud1, matrix ud2)
 {
 	try
 	{
 		solution Xopt;
-		//Tu wpisz kod funkcji
+		int f_calls = 0;
+
+		// helper f(x) with caching
+		auto f = [&](double x) {
+			matrix X(1,1);
+			X(0,0) = x;
+			f_calls++;
+			return ff(X, ud1, ud2)(0,0);
+			};
+
+		// build fibonacci sequence until œÜ_k > (b-a)/epsilon
+		std::vector<long long> F = {1,1};
+		while (F.back() < (b - a) / epsilon)
+			F.push_back(F[F.size()-1] + F[F.size()-2]);
+		int k = F.size() - 1;
+
+		double a_i = a;
+		double b_i = b;
+
+		double c_i = b_i - (double)F[k-1] / F[k] * (b_i - a_i);
+		double d_i = a_i + b_i - c_i;
+
+		double fc = f(c_i);
+		double fd = f(d_i);
+
+		for (int i = 0; i < k-2; i++)
+		{
+			if (fc < fd) {
+				b_i = d_i;
+				d_i = c_i;
+				fd = fc;
+				c_i = b_i - (double)F[k-i-2] / F[k-i-1] * (b_i - a_i);
+				fc = f(c_i);
+			} else {
+				a_i = c_i;
+				c_i = d_i;
+				fc = fd;
+				d_i = a_i + b_i - c_i;
+				fd = f(d_i);
+			}
+		}
+
+		Xopt.x = c_i;
+		Xopt.y = fc;
+		Xopt.f_calls = f_calls;
+		Xopt.flag = 0; // local minimum
 
 		return Xopt;
 	}
@@ -150,7 +209,6 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 	{
 		throw ("solution fib(...):\n" + ex_info);
 	}
-
 }
 
 solution lag(matrix(*ff)(matrix, matrix, matrix), double a, double b, double epsilon, double gamma, int Nmax, matrix ud1, matrix ud2)
@@ -158,7 +216,68 @@ solution lag(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 	try
 	{
 		solution Xopt;
-		//Tu wpisz kod funkcji
+
+		double ai = a;
+		double bi = b;
+		double ci = (a + b) / 2.0;  // initial midpoint
+		int f_calls = 0;
+
+		// helper f(x) with counter
+		auto f = [&](double x) -> double {
+			matrix X(1,1);
+			X(0,0) = x;
+			f_calls++;
+			return ff(X, ud1, ud2)(0,0);
+			};
+
+		// cache initial values
+		double fa = f(ai);
+		double fb = f(bi);
+		double fc = f(ci);
+
+		while (f_calls < Nmax)
+		{
+			double l = fa * ((bi*bi) - (ci*ci))
+				+ fb * ((ci*ci) - (ai*ai))
+				+ fc * ((ai*ai) - (bi*bi));
+
+			double m = fa * (bi - ci)
+				+ fb * (ci - ai)
+				+ fc * (ai - bi);
+
+			if (m <= 1e-12) break;  // avoid division by zero / negative
+
+			double di = 0.5 * l / m;
+			double fdi = f(di);
+
+			if (ai < di && di < ci)
+			{
+				if (fdi < fc)
+				{
+					bi = ci; fb = fc;
+					ci = di; fc = fdi;
+				}
+				else
+				{
+					ai = di; fa = fdi;
+				}
+			}
+			else
+			{
+				// if di outside interval, reduce interval
+				if (fabs(ci - ai) < epsilon) break;
+				// optionally shrink interval slightly
+				ai = ai; // keep same for now
+				break;
+			}
+
+			if (fabs(ci - ai) < epsilon) break;
+		}
+
+		Xopt.x = ci;
+		Xopt.y = fc;
+		Xopt.f_calls = f_calls;
+		Xopt.flag = 0; // local minimum
 
 		return Xopt;
 	}
@@ -167,6 +286,7 @@ solution lag(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 		throw ("solution lag(...):\n" + ex_info);
 	}
 }
+
 
 solution HJ(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double alpha, double epsilon, int Nmax, matrix ud1, matrix ud2)
 {

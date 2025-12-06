@@ -9,6 +9,7 @@ Data ostatniej modyfikacji: 30.09.2025
 *********************************************/
 
 #include"opt_alg.h"
+#include"ctime"
 
 void lab0();
 void lab1();
@@ -22,7 +23,7 @@ int main()
 {
 	try
 	{
-		lab0();
+		lab1();
 	}
 	catch (string EX_INFO)
 	{
@@ -66,9 +67,42 @@ void lab0()
 	Y[1].~matrix();
 }
 
+
 void lab1()
 {
+	matrix ud1, ud2;   // macierze pomocnicze
 
+	std::srand(std::time(0));
+	//double x0 = 62.0;   // wyjsciowa dziedzina [-100,100]
+	double a = -100.0;
+	double b = 100.0;
+	double d = 1.0;    // rozmiar kroku wyjsciowego
+	//double alpha = 1.1; // wspolczynnik ekspansji
+	double* alphat = new double[3]{1.1, 1.5, 2.0};
+	int Nmax = 1000;   // maksymalna liczba wywolan espansji
+	double epsilon = 1e-6; // dokladnosc dla metod lokalnych
+	double gamma = 0.618; // wspolczynnik zlagrania dla metody Lagrange'a
+
+	ofstream Sout("ekspansja_lab1.csv");// definiujemy strumieñ do pliku .csv
+
+	for (int e = 0; e < 3; e++ )
+	for (int i = 0; i < 100; i++)
+	{
+		double x0 = (double)( (double)(rand() % 20000)/100 - 100); //losowa liczba pomiedzy -100 a 100
+
+		double* interval = expansion(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
+		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] << ";";
+
+		solution sol1 = fib(ff1T, interval[0], interval[1], epsilon, ud1, ud2);
+		Sout << m2d(sol1.x) << ";" << m2d(sol1.y) << ";" << sol1.f_calls << ";" << sol1.flag << ";";
+		solution sol2 = lag(ff1T, interval[0], interval[1], epsilon, gamma, Nmax, ud1, ud2);
+		Sout << m2d(sol2.x) << ";" << m2d(sol2.y) << ";" << sol2.f_calls << ";" << sol2.flag << "\n";
+	}
+	Sout.close();
+	solution sol1 = fib(ff1T, -100, 100, epsilon, ud1, ud2);
+	cout << m2d(sol1.x) << ";" << m2d(sol1.y) << ";" << sol1.f_calls << ";" << sol1.flag << ";";
+	solution sol2 = lag(ff1T, -100, 100, epsilon, gamma, Nmax, ud1, ud2);
+	cout << m2d(sol2.x) << ";" << m2d(sol2.y) << ";" << sol2.f_calls << ";" << sol2.flag << "\n";
 }
 
 void lab2()
