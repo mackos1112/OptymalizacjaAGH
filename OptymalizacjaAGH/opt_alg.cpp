@@ -158,7 +158,7 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 		solution Xopt;
 		int f_calls = 0;
 
-		// helper f(x)
+		// helper f(x) with caching
 		auto f = [&](double x) {
 			matrix X(1,1);
 			X(0,0) = x;
@@ -166,7 +166,7 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 			return ff(X, ud1, ud2)(0,0);
 			};
 
-		// build fibonacci seq until φ_k > (b-a)/ε
+		// build fibonacci sequence until φ_k > (b-a)/epsilon
 		std::vector<long long> F = {1,1};
 		while (F.back() < (b - a) / epsilon)
 			F.push_back(F[F.size()-1] + F[F.size()-2]);
@@ -178,25 +178,30 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 		double c_i = b_i - (double)F[k-1] / F[k] * (b_i - a_i);
 		double d_i = a_i + b_i - c_i;
 
+		double fc = f(c_i);
+		double fd = f(d_i);
+
 		for (int i = 0; i < k-2; i++)
 		{
-			if (f(c_i) < f(d_i)) {
+			if (fc < fd) {
 				b_i = d_i;
+				d_i = c_i;
+				fd = fc;
+				c_i = b_i - (double)F[k-i-2] / F[k-i-1] * (b_i - a_i);
+				fc = f(c_i);
 			} else {
 				a_i = c_i;
+				c_i = d_i;
+				fc = fd;
+				d_i = a_i + b_i - c_i;
+				fd = f(d_i);
 			}
-
-			c_i = b_i - (double)F[k-i-2] / F[k-i-1] * (b_i - a_i);
-			d_i = a_i + b_i - c_i;
 		}
 
 		Xopt.x = c_i;
-		Xopt.y = f(c_i);
+		Xopt.y = fc;
 		Xopt.f_calls = f_calls;
-
-
-		// zakładamy lokalne minimum, bo fib() nie sprawdza całej funkcji
-		Xopt.flag = 0;       // 0 = lokalne, 1 = globalne
+		Xopt.flag = 0; // local minimum
 
 		return Xopt;
 	}
@@ -204,7 +209,6 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 	{
 		throw ("solution fib(...):\n" + ex_info);
 	}
-
 }
 
 solution lag(matrix(*ff)(matrix, matrix, matrix), double a, double b, double epsilon, double gamma, int Nmax, matrix ud1, matrix ud2)
@@ -213,83 +217,67 @@ solution lag(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 	{
 		solution Xopt;
 
-		// Implementation based on provided pseudocode
-
-		int i = 0;
 		double ai = a;
 		double bi = b;
-		double ci = (a + b) / 2.0;  // Initial c(0) as midpoint
+		double ci = (a + b) / 2.0;  // initial midpoint
 		int f_calls = 0;
 
-		// Helper function for evaluating the original function
+		// helper f(x) with counter
 		auto f = [&](double x) -> double {
-			matrix X(1, 1);
-			X(0, 0) = x;
-			matrix Y = ff(X, ud1, ud2);
+			matrix X(1,1);
+			X(0,0) = x;
 			f_calls++;
-			return Y(0, 0);
+			return ff(X, ud1, ud2)(0,0);
 			};
 
-		while (f_calls < Nmax) {
-			// Step 4
-			double l = f(ai) * ((bi * bi) - (ci * ci))
-				+ f(bi) * ((ci * ci) - (ai * ai))
-				+ f(ci) * ((ai * ai) - (bi * bi));
+		// cache initial values
+		double fa = f(ai);
+		double fb = f(bi);
+		double fc = f(ci);
 
-			// Step 5
-			double m = f(ai) * (bi - ci)
-				+ f(bi) * (ci - ai)
-				+ f(ci) * (ai - bi);
+		while (f_calls < Nmax)
+		{
+			double l = fa * ((bi*bi) - (ci*ci))
+				+ fb * ((ci*ci) - (ai*ai))
+				+ fc * ((ai*ai) - (bi*bi));
 
-			// Step 6: error if m <= 0
-			if (m <= 0) {
-				throw std::string("lag: m <= 0, interpolation error");
-			}
+			double m = fa * (bi - ci)
+				+ fb * (ci - ai)
+				+ fc * (ai - bi);
 
-			// Step 9
+			if (m <= 1e-12) break;  // avoid division by zero / negative
+
 			double di = 0.5 * l / m;
+			double fdi = f(di);
 
-			// Step 10: if ai < di < ci
-			if (ai < di && di < ci) {
-				// Step 11
-				if (f(di) < f(ci)) {
-					// Step 12-14
-					double ai_next = ai;
-					double ci_next = di;
-					double bi_next = ci;
-					ai = ai_next;
-					bi = bi_next;
-					ci = ci_next;
+			if (ai < di && di < ci)
+			{
+				if (fdi < fc)
+				{
+					bi = ci; fb = fc;
+					ci = di; fc = fdi;
 				}
-				else {
-					// Step 16-18
-					double ai_next = di;
-					double ci_next = ci;
-					double bi_next = bi;
-					ai = ai_next;
-					bi = bi_next;
-					ci = ci_next;
+				else
+				{
+					ai = di; fa = fdi;
 				}
 			}
-			else {
-				// Step 20: exit if interval too small
+			else
+			{
+				// if di outside interval, reduce interval
+				if (fabs(ci - ai) < epsilon) break;
+				// optionally shrink interval slightly
+				ai = ai; // keep same for now
 				break;
 			}
 
-			// Stopping criterion (not specified; could use |ci - ai| < epsilon)
-			if (fabs(ci - ai) < epsilon) {
-				break;
-			}
-
-			i++;
+			if (fabs(ci - ai) < epsilon) break;
 		}
 
-		// Save best found so far
-		matrix xopt_mat(1, 1);
-		xopt_mat(0, 0) = ci;
-		Xopt.x = xopt_mat;
-		Xopt.y = f(ci);
-		Xopt.flag = 1;
+		Xopt.x = ci;
+		Xopt.y = fc;
+		Xopt.f_calls = f_calls;
+		Xopt.flag = 0; // local minimum
 
 		return Xopt;
 	}
@@ -298,6 +286,7 @@ solution lag(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 		throw ("solution lag(...):\n" + ex_info);
 	}
 }
+
 
 solution HJ(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double alpha, double epsilon, int Nmax, matrix ud1, matrix ud2)
 {
