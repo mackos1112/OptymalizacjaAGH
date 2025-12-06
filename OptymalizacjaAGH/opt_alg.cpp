@@ -172,7 +172,84 @@ solution lag(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 	try
 	{
 		solution Xopt;
-		//Tu wpisz kod funkcji
+
+		// Implementation based on provided pseudocode
+
+		int i = 0;
+		double ai = a;
+		double bi = b;
+		double ci = (a + b) / 2.0;  // Initial c(0) as midpoint
+		int f_calls = 0;
+
+		// Helper function for evaluating the original function
+		auto f = [&](double x) -> double {
+			matrix X(1, 1);
+			X(0, 0) = x;
+			matrix Y = ff(X, ud1, ud2);
+			f_calls++;
+			return Y(0, 0);
+			};
+
+		while (f_calls < Nmax) {
+			// Step 4
+			double l = f(ai) * ((bi * bi) - (ci * ci))
+				+ f(bi) * ((ci * ci) - (ai * ai))
+				+ f(ci) * ((ai * ai) - (bi * bi));
+
+			// Step 5
+			double m = f(ai) * (bi - ci)
+				+ f(bi) * (ci - ai)
+				+ f(ci) * (ai - bi);
+
+			// Step 6: error if m <= 0
+			if (m <= 0) {
+				throw std::string("lag: m <= 0, interpolation error");
+			}
+
+			// Step 9
+			double di = 0.5 * l / m;
+
+			// Step 10: if ai < di < ci
+			if (ai < di && di < ci) {
+				// Step 11
+				if (f(di) < f(ci)) {
+					// Step 12-14
+					double ai_next = ai;
+					double ci_next = di;
+					double bi_next = ci;
+					ai = ai_next;
+					bi = bi_next;
+					ci = ci_next;
+				}
+				else {
+					// Step 16-18
+					double ai_next = di;
+					double ci_next = ci;
+					double bi_next = bi;
+					ai = ai_next;
+					bi = bi_next;
+					ci = ci_next;
+				}
+			}
+			else {
+				// Step 20: exit if interval too small
+				break;
+			}
+
+			// Stopping criterion (not specified; could use |ci - ai| < epsilon)
+			if (fabs(ci - ai) < epsilon) {
+				break;
+			}
+
+			i++;
+		}
+
+		// Save best found so far
+		matrix xopt_mat(1, 1);
+		xopt_mat(0, 0) = ci;
+		Xopt.x = xopt_mat;
+		Xopt.y = f(ci);
+		Xopt.flag = 1;
 
 		return Xopt;
 	}
