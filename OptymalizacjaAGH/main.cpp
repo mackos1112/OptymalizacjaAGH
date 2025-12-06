@@ -82,7 +82,7 @@ void lab1()
 	double alpha = 1.1; // wspolczynnik ekspansji
 	int Nmax = 1000;   // maksymalna liczba wywolan espansji
 
-	double* interval = expansion(ff1T, x0, d, alpha, Nmax, ud1, ud2);
+	
 
 	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "] f_calls: " << interval[2] << std::endl;
 
@@ -90,6 +90,7 @@ void lab1()
 	ofstream Sout("ekspansja_lab1.csv");// definiujemy strumieñ do pliku .csv
 	for (int i = 0; i < 100; i++)
 	{
+		double* interval = expansion(ff1T, x0, d, alpha, Nmax, ud1, ud2);
 		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] <<"\n";
 	}
 	Sout.close();
