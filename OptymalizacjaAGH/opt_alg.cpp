@@ -45,7 +45,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 {
 	try
 	{
-		double* p = new double[3]{ 0.0, 0.0, 0.0 };
+		double* p = new double[3]{ 0.0, 0.0, 0.0};
 
 		// pomocnicza funkcja celu f(x)
 		auto f = [&](double x) -> double {

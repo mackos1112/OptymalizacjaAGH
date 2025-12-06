@@ -87,7 +87,12 @@ void lab1()
 	std::cout << "Zasieg po ekspansji: [" << interval[0] << ", " << interval[1] << "] f_calls: " << interval[2] << std::endl;
 
 
-
+	ofstream Sout("ekspansja_lab1.csv");// definiujemy strumieñ do pliku .csv
+	for (int i = 0; i < 100; i++)
+	{
+		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] <<"\n";
+	}
+	Sout.close();
 }
 
 void lab2()
