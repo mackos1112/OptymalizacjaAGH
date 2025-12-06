@@ -1,3 +1,4 @@
-Debug/
-OptymalizacjaAGH/Debug/
-.vs/
+Debug/*
+OptymalizacjaAGH/Debug/*
+.vs/*
+*.csv
