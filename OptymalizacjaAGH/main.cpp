@@ -94,9 +94,9 @@ void lab1()
 		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] << ";";
 
 		solution sol1 = fib(ff1T, a, b, epsilon, ud1, ud2);
-		Sout << sol1.x << ";" << sol1.y << ";" << sol1.f_calls << ";" << sol1.flag << ";";
+		Sout << m2d(sol1.x) << ";" << m2d(sol1.y) << ";" << sol1.f_calls << ";" << sol1.flag << ";";
 		solution sol2 = lag(ff1T, a, b, epsilon, gamma, Nmax, ud1, ud2);
-		Sout << sol2.x << ";" << sol2.y << ";" << sol2.f_calls << ";" << sol2.flag << "\n";
+		Sout << m2d(sol2.x) << ";" << m2d(sol2.y) << ";" << sol2.f_calls << ";" << sol2.flag << "\n";
 	}
 	Sout.close();
 }
