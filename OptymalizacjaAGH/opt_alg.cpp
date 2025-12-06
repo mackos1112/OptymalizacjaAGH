@@ -194,6 +194,10 @@ solution fib(matrix(*ff)(matrix, matrix, matrix), double a, double b, double eps
 		Xopt.y = f(c_i);
 		Xopt.f_calls = f_calls;
 
+
+		// zakładamy lokalne minimum, bo fib() nie sprawdza całej funkcji
+		Xopt.flag = 0;       // 0 = lokalne, 1 = globalne
+
 		return Xopt;
 	}
 	catch (string ex_info)
