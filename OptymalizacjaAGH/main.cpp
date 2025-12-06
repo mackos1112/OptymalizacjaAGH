@@ -76,14 +76,17 @@ void lab1()
 	//double x0 = 62.0;   // wyjsciowa dziedzina [-100,100]
 	
 	double d = 1.0;    // rozmiar kroku wyjsciowego
-	double alpha = 1.1; // wspolczynnik ekspansji
+	//double alpha = 1.1; // wspolczynnik ekspansji
+	double* alphat = new double[3]{1.1, 1.5, 2.0};
 	int Nmax = 1000;   // maksymalna liczba wywolan espansji
 
 	ofstream Sout("ekspansja_lab1.csv");// definiujemy strumieñ do pliku .csv
+
+	for (int e = 0; e < 3; e++ )
 	for (int i = 0; i < 100; i++)
 	{
 		double x0 = (double)(rand() % 200 - 100); //losowa liczba pomiedzy -100 a 100
-		double* interval = expansion(ff1T, x0, d, alpha, Nmax, ud1, ud2);
+		double* interval = expansion(ff1T, x0, d, alphat[e], Nmax, ud1, ud2);
 		Sout << x0 << ";"<< interval[0] << ";" << interval[1] << ";"<< interval[2] <<"\n";
 	}
 	Sout.close();
