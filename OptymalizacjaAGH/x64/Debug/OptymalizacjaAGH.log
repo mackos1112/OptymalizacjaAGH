@@ -1,13 +1,8 @@
 ﻿  main.cpp
-C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(75,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  matrix.cpp
-C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\matrix.cpp(393,17): warning C4101: 'rd': unreferenced local variable
-  ode_solver.cpp
+C:\Users\GICU\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(75,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
   opt_alg.cpp
-C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(77,17): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1250)
-C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(97,18): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1250)
-C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(173,9): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  solution.cpp
-  user_funs.cpp
-  Generating Code...
-  OptymalizacjaAGH.vcxproj -> C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
+C:\Users\GICU\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(77,17): warning C4566: znak przedstawiony przez nazwę zawierającą znaki uniwersalne "\u2192" nie może być przedstawiony w bieżącej stronie kodowej (1250)
+C:\Users\GICU\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(97,18): warning C4566: znak przedstawiony przez nazwę zawierającą znaki uniwersalne "\u2192" nie może być przedstawiony w bieżącej stronie kodowej (1250)
+C:\Users\GICU\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(173,9): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+  Generowanie kodu...
+  OptymalizacjaAGH.vcxproj -> C:\Users\GICU\Source\Repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
