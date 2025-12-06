@@ -1,9 +1,6 @@
-﻿  main.cpp
-  matrix.cpp
-  ode_solver.cpp
-  opt_alg.cpp
-  solution.cpp
+﻿  opt_alg.cpp
+E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(77,17): warning C4566: znak przedstawiony przez nazwę zawierającą znaki uniwersalne "\u2192" nie może być przedstawiony w bieżącej stronie kodowej (1250)
+E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(96,18): warning C4566: znak przedstawiony przez nazwę zawierającą znaki uniwersalne "\u2192" nie może być przedstawiony w bieżącej stronie kodowej (1250)
   user_funs.cpp
   Generowanie kodu...
-  LINK : nie znaleziono elementu E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\Debug\OptymalizacjaAGH.exe ani nie został on skompilowany podczas ostatniego konsolidowania przyrostowego; zostanie wykonana pełna konsolidacja
   OptymalizacjaAGH.vcxproj -> E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\Debug\OptymalizacjaAGH.exe

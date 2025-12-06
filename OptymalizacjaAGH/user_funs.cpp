@@ -33,3 +33,22 @@ matrix df0(double t, matrix Y, matrix ud1, matrix ud2)
 	dY(1) = ((t <= ud2(1)) * ud2(0) - m * g * l * sin(Y(0)) - b * Y(1)) / I;	// pochodna z prêdkoœci to przyspieszenie
 	return dY;
 }
+
+matrix ff1T(matrix x, matrix ud1, matrix ud2)
+{
+	matrix y;   // y zawiera wartoœæ funkcji celu
+
+	// pobieramy wartoœæ x jako double
+	double xv = m2d(x);
+
+	// obliczamy wartoœæ funkcji:
+	// f(x) = -cos(0.1*x) * exp((-0.1*x - 2*pi)^2) + 0.002*(0.1*x)^2
+	double fx = -cos(0.1 * xv) * exp(-pow(0.1 * xv - 2 * 3.14, 2))
+		+ 0.002 * pow(0.1 * xv, 2);
+
+	y = matrix(1, 1);   // wynik jako macierz 1x1
+	y(0, 0) = fx;
+
+	return y;
+}
+
