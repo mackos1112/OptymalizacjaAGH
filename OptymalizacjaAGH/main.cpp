@@ -179,49 +179,46 @@ void lab1()
 	Sout_tanks << "Lagrange;" << m2d(sol_lag.x) << ";" << m2d(sol_lag.y) << ";" << sol_lag.f_calls << ";" << sol_lag.flag << "\n";
 	Sout_tanks.close();
 
-	// Symulacja dla znalezionego optymalnego DA (uzywamy wyniku z Fibonacciego)
-	double DA_opt = m2d(sol_fib.x);
-	cout << "\nSymulacja dla optymalnego DA = " << DA_opt << " cm2:" << endl;
+	// Run ODE simulation for both optima
+	double DA_opt_fib = m2d(sol_fib.x);
+	double DA_opt_lag = m2d(sol_lag.x);
 
-	matrix Y0_sim(4, 1);
-	Y0_sim(0) = 5.0;   // VA0
-	Y0_sim(1) = 1.0;   // VB0
-	Y0_sim(2) = 95.0;  // TA0
-	Y0_sim(3) = 20.0;  // TB0
-	matrix params_sim(2, 1);
-	params_sim(0) = DA_opt;    // DA w cm2
-	params_sim(1) = 36.5665;   // DB w cm2
-	matrix* Y_sim = solve_ode(df_tanks, 0.0, 1.0, 2000.0, Y0_sim, ud1, params_sim);
+	matrix Y0_common(4, 1);
+	Y0_common(0) = 5.0;   // VA0
+	Y0_common(1) = 1.0;   // VB0
+	Y0_common(2) = 95.0;  // TA0
+	Y0_common(3) = 20.0;  // TB0
+	matrix params_fib(2, 1), params_lag(2, 1);
+	params_fib(0) = DA_opt_fib;
+	params_fib(1) = 36.5665;
+	params_lag(0) = DA_opt_lag;
+	params_lag(1) = 36.5665;
 
-	// Zapis symulacji do pliku CSV
-	// Format: t, VA, VB, TA, TB
-	// Po transpozycji w solve_ode: Y[1] ma format (kroki × zmienne)
-	// Zmienne: 0=VA, 1=VB, 2=TA, 3=TB
-	ofstream Sout_sim("symulacja_zbiorniki.csv");
-	Sout_sim << "t[s];VA[m3];VB[m3];TA[degC];TB[degC]\n";
-	int n_sim = get_len(Y_sim[0]);
-	for (int i = 0; i < n_sim; ++i)
-	{
-		Sout_sim << Y_sim[0](i) << ";" 
-			<< Y_sim[1](i, 0) << ";"   // krok i, zmienna VA=0
-			<< Y_sim[1](i, 1) << ";"   // krok i, zmienna VB=1
-			<< Y_sim[1](i, 2) << ";"   // krok i, zmienna TA=2
-			<< Y_sim[1](i, 3) << "\n"; // krok i, zmienna TB=3
+	matrix* Y_fib = solve_ode(df_tanks, 0.0, 1.0, 2000.0, Y0_common, ud1, params_fib);
+	matrix* Y_lag = solve_ode(df_tanks, 0.0, 1.0, 2000.0, Y0_common, ud1, params_lag);
+
+	int n_steps = get_len(Y_fib[0]); // should match Y_lag[0]
+
+	// Write t, Va_fib, Vb_fib, Va_lag, Vb_lag, Tb_fib, Tb_lag
+	ofstream Sout_sim("symulacja_zbiorniki_porownanie.csv");
+	Sout_sim << "t[s];VA_fib[m3];VB_fib[m3];VA_lag[m3];VB_lag[m3];TB_fib[degC];TB_lag[degC]\n";
+	for (int i = 0; i < n_steps; ++i) {
+		Sout_sim
+			<< Y_fib[0](i) << ";"              // t
+			<< Y_fib[1](i, 0) << ";"           // VA Fibonacci
+			<< Y_fib[1](i, 1) << ";"           // VB Fibonacci
+			<< Y_lag[1](i, 0) << ";"           // VA Lagrange
+			<< Y_lag[1](i, 1) << ";"           // VB Lagrange
+			<< Y_fib[1](i, 3) << ";"           // TB Fibonacci
+			<< Y_lag[1](i, 3) << "\n";         // TB Lagrange
 	}
 	Sout_sim.close();
 
-	// Znajdz maksymalna temperature
-	double T_max_sim = Y_sim[1](0, 3);  // krok 0, zmienna TB=3
-	for (int i = 1; i < n_sim; ++i)
-	{
-		if (T_max_sim < Y_sim[1](i, 3))  // krok i, zmienna TB=3
-			T_max_sim = Y_sim[1](i, 3);
-	}
-	cout << "  Maksymalna temperatura TB = " << T_max_sim << " degC" << endl;
-	cout << "  Wyniki zapisane do: symulacja_zbiorniki.csv" << endl;
-
-	Y_sim[0].~matrix();
-	Y_sim[1].~matrix();
+	// cleanup
+	Y_fib[0].~matrix();
+	Y_fib[1].~matrix();
+	Y_lag[0].~matrix();
+	Y_lag[1].~matrix();
 	delete[] interval_tanks;
 	delete[] alphat;
 }
