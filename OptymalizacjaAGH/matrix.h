@@ -1,4 +1,4 @@
-//Ten plik nie powinien byæ edytowany
+//Ten plik nie powinien byc edytowany
 
 #pragma once
 
@@ -8,6 +8,12 @@
 #include<fstream>
 #include<random>
 #include<chrono>
+#include<cmath>
+#include<limits>
+using std::isnan;
+#ifndef NAN
+#define NAN std::numeric_limits<double>::quiet_NaN()
+#endif
 using namespace std;
 
 #define SEP_SYMBOL ','

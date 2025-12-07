@@ -1,1 +1,3 @@
-﻿  OptymalizacjaAGH.vcxproj -> C:\Users\GICU\Source\Repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
+﻿  main.cpp
+C:\Users\GICU\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(75,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+  OptymalizacjaAGH.vcxproj -> C:\Users\GICU\Source\Repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
