@@ -1,8 +1,9 @@
-//Ten plik nie powinien byæ edytowany
+//Ten plik nie powinien byc edytowany
 
 #pragma once
 
 #include"matrix.h"
 #include"user_funs.h"
 
-matrix* solve_ode(matrix(*)(double, matrix, matrix, matrix), double, double, double, matrix, matrix = NAN, matrix = NAN); // throw (string);
+// Solve ODE with signature: diff(t, Y, ud1, ud2)
+matrix* solve_ode(matrix (*diff)(double, matrix, matrix, matrix), double t0, double dt, double tend, matrix Y0, matrix ud1 = matrix(), matrix ud2 = matrix()); // throw (string);

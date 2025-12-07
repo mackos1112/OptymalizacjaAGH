@@ -53,7 +53,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 			X(0, 0) = x;
 			matrix Y = ff(X, ud1, ud2);
 			return Y(0, 0);
-		};
+			};
 
 		int f_calls = 0;                          // licznik wywołań funkcji celu
 
@@ -65,7 +65,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 		double f1 = f(x1_curr); ++f_calls;        // f(x^(1))
 
 		if( DEBUG )
-		std::cout << "[DEBUG] i=0, x0=" << x0_curr << " f(x0)=" << f0
+			std::cout << "[DEBUG] i=0, x0=" << x0_curr << " f(x0)=" << f0
 			<< ", x1=" << x1_curr << " f(x1)=" << f1 << std::endl;
 
 		// przypadek: wartości równe
@@ -74,8 +74,8 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 			p[1] = x1_curr;
 
 			if (DEBUG)
-			std::cout << "[DEBUG] f(x1) == f(x0) → zwracam [" << p[0] << ", " << p[1] << "]" << std::endl;
-			
+				std::cout << "[DEBUG] f(x1) == f(x0) -> zwracam [" << p[0] << ", " << p[1] << "]" << std::endl;
+
 			p[2] = f_calls;
 			return p;
 		}
@@ -87,15 +87,15 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 			f1 = f(x1_curr); ++f_calls;
 
 			if (DEBUG)
-			std::cout << "[DEBUG] f(x1) > f(x0), zmiana kierunku: x1=" << x1_curr << " f(x1)=" << f1 << std::endl;
+				std::cout << "[DEBUG] f(x1) > f(x0), zmiana kierunku: x1=" << x1_curr << " f(x1)=" << f1 << std::endl;
 
 			if (f1 >= f0) {
 				p[0] = x1_curr;
 				p[1] = x0 + d;   // poprawka zgodna z pseudokodem
 
 				if (DEBUG)
-				std::cout << "[DEBUG] f(x1) >= f(x0) → zwracam [" << p[0] << ", " << p[1] << "]" << std::endl;
-				
+					std::cout << "[DEBUG] f(x1) >= f(x0) -> zwracam [" << p[0] << ", " << p[1] << "]" << std::endl;
+
 				p[2] = f_calls;
 				return p;
 			}
@@ -115,12 +115,12 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 			f_next = f(x_next); ++f_calls;
 
 			if (DEBUG)
-			std::cout << "[DEBUG] i=" << i << ", x_next=" << x_next << " f(x_next)=" << f_next << std::endl;
+				std::cout << "[DEBUG] i=" << i << ", x_next=" << x_next << " f(x_next)=" << f_next << std::endl;
 
 			if (f1 <= f_next) {
 				if (DEBUG)
-				std::cout << "[DEBUG] warunek stopu: f(x(i)) <= f(x(i+1))" << std::endl;
-				
+					std::cout << "[DEBUG] warunek stopu: f(x(i)) <= f(x(i+1))" << std::endl;
+
 				break;
 			}
 
@@ -140,7 +140,7 @@ double* expansion(matrix(*ff)(matrix, matrix, matrix),
 		}
 
 		if (DEBUG)
-		std::cout << "[DEBUG] Zwracam przedział [" << p[0] << ", " << p[1] << "]" << std::endl;
+			std::cout << "[DEBUG] Zwracam przedział [" << p[0] << ", " << p[1] << "]" << std::endl;
 
 		p[2] = f_calls;
 		return p;
