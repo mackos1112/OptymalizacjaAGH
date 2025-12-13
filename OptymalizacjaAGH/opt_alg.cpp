@@ -351,7 +351,137 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 	try
 	{
 		solution Xopt;
-		//Tu wpisz kod funkcji
+
+		// Nelder-Mead simplex method (sympleks Neldera-Meada) implementation
+		int n = 2; // dimension of the problem
+
+		// initialize simplex points p0 = x0, pi = x0 + s*ei for i=1..n
+		std::vector<matrix> P(n + 1);
+		P[0] = x0;
+		for (int i = 1; i <= n; ++i)
+		{
+			P[i] = x0;
+			// add s to the (i-1)-th coordinate
+			P[i](i - 1, 0) = P[i](i - 1, 0) + s;
+		}
+
+		int f_calls = 0;
+		auto f = [&](const matrix& X) -> double {
+			matrix Y = ff(X, ud1, ud2);
+			++f_calls;
+			return Y(0, 0);
+			};
+
+		// compute initial function values
+		std::vector<double> fv(n + 1);
+		for (int i = 0; i <= n; ++i) fv[i] = f(P[i]);
+
+		while (true)
+		{
+			// determine pmin and pmax
+			int idx_min = 0, idx_max = 0;
+			for (int i = 1; i <= n; ++i)
+			{
+				if (fv[i] < fv[idx_min]) idx_min = i;
+				if (fv[i] > fv[idx_max]) idx_max = i;
+			}
+
+			// if all values equal, break (can't progress)
+			if (idx_min == idx_max) break;
+
+			// compute centroid p = (sum_{i != max} pi) / n
+			matrix p(n, 1, 0.0);
+			for (int i = 0; i <= n; ++i)
+			{
+				if (i == idx_max) continue;
+				for (int j = 0; j < n; ++j)
+					p(j, 0) += P[i](j, 0);
+			}
+			for (int j = 0; j < n; ++j) p(j, 0) /= static_cast<double>(n);
+
+			// reflection: podb = p + alpha*(p - pmax)
+			matrix temp = p - P[idx_max];
+			for (int j = 0; j < n; ++j) temp(j, 0) *= alpha;
+			matrix podb = p + temp;
+			double f_podb = f(podb);
+
+			if (f_podb < fv[idx_min])
+			{
+				// expansion: pe = p + gamma*(podb - p)
+				matrix temp2 = podb - p;
+				for (int j = 0; j < n; ++j) temp2(j, 0) *= gamma;
+				matrix pe = p + temp2;
+				double f_pe = f(pe);
+
+				if (f_pe < f_podb)
+				{
+					P[idx_max] = pe;
+					fv[idx_max] = f_pe;
+				}
+				else
+				{
+					P[idx_max] = podb;
+					fv[idx_max] = f_podb;
+				}
+			}
+			else
+			{
+				if (fv[idx_min] <= f_podb && f_podb < fv[idx_max])
+				{
+					// accept reflection
+					P[idx_max] = podb;
+					fv[idx_max] = f_podb;
+				}
+				else
+				{
+					// contraction: pz = p + beta*(pmax - p)
+					matrix temp3 = P[idx_max] - p;
+					for (int j = 0; j < n; ++j) temp3(j, 0) *= beta;
+					matrix pz = p + temp3;
+					double f_pz = f(pz);
+
+					if (f_pz >= fv[idx_max])
+					{
+						// shrink towards pmin: pi = pmin + delta*(pi - pmin) for i != min
+						for (int i = 0; i <= n; ++i)
+						{
+							if (i == idx_min) continue;
+							matrix diff = P[i] - P[idx_min];
+							for (int j = 0; j < n; ++j) diff(j, 0) *= delta;
+							P[i] = P[idx_min] + diff;
+							fv[i] = f(P[i]);
+						}
+					}
+					else
+					{
+						P[idx_max] = pz;
+						fv[idx_max] = f_pz;
+					}
+				}
+			}
+
+			if (f_calls > Nmax)
+				throw std::string("sym_NM: przekroczono maksymalna liczbe wywolan funkcji celu");
+
+			// check termination: max_i ||pmin - pi||2 < epsilon
+			double max_dist = 0.0;
+			for (int i = 0; i <= n; ++i)
+			{
+				matrix diff = P[i] - P[idx_min];
+				double d = norm(diff);
+				if (d > max_dist) max_dist = d;
+			}
+			if (max_dist < epsilon) break;
+		}
+
+		// return best found point
+		int best = 0;
+		for (int i = 1; i <= n; ++i) if (fv[i] < fv[best]) best = i;
+
+		Xopt.x = P[best];
+		Xopt.y = ff(Xopt.x, ud1, ud2);
+		Xopt.f_calls = f_calls;
+		Xopt.flag = 0; // local minimum
 
 		return Xopt;
 	}

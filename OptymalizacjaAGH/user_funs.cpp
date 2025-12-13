@@ -1,4 +1,7 @@
 #include"user_funs.h"
+#include <cmath>
+
+#define MATH_PI 3.1415926
 
 matrix ff0T(matrix x, matrix ud1, matrix ud2)				// funkcja celu dla przypadku testowego
 {
@@ -199,3 +202,11 @@ matrix ff_tanks(matrix x, matrix ud1, matrix ud2)
 	return y;
 }
 
+matrix ff2T(matrix x1, matrix x2, matrix ud1)				// funkcja celu dla przypadku testowego
+{
+	matrix y;												// y zawiera wartosc funkcji celu
+	matrix pom = MATH_PI * pow(pow(m2d(x1) / MATH_PI, 2) + pow(m2d(x2) / MATH_PI, 2), 0.5);
+	y = sin(m2d(pom)) / m2d(pom);
+
+	return y;
+}

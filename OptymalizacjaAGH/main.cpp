@@ -225,7 +225,24 @@ void lab1()
 
 void lab2()
 {
+	matrix ud1, ud2;   // macierze pomocnicze
 
+	double* alphat = new double[3] {4, 4.4934, 5};
+	std::srand(std::time(0));
+
+	for (int i = 0; i < 3; i++)
+	{
+
+		for (int j = 0; j < 100; j++)
+		{
+			
+			double x0 = (double)((double)(rand() % 3) + 1); //losowa liczba pomiedzy 1 a 4
+			double x1 = (double)((double)(rand() % 3) + 1); //losowa liczba pomiedzy 1 a 4
+			matrix xin(x0, x1);
+
+			sym_NM(ff2T, xin, 1.0, 1.0, 0.5, 2.0, 0.5, 0.001, 100, ud1, ud2);
+		}
+	}
 }
 
 void lab3()
