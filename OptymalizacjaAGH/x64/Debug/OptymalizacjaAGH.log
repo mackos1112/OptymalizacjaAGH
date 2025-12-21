@@ -1,3 +1,2 @@
-﻿  opt_alg.cpp
-C:\Users\kgrzegorzewicz\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(173,9): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  OptymalizacjaAGH.vcxproj -> C:\Users\kgrzegorzewicz\Source\Repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
+﻿  user_funs.cpp
+  OptymalizacjaAGH.vcxproj -> E:\USERS\adawoja2\Source\Repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
