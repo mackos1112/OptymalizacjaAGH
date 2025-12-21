@@ -25,6 +25,8 @@ int main()
 	{
 		//TODO: lab 2
 		//lab2();
+
+		//TODO: lab 3
 		lab3();
 	}
 	catch (string EX_INFO)
@@ -249,7 +251,39 @@ void lab2()
 
 void lab3()
 {
+	matrix ud1, ud2;   // macierze pomocnicze
+	int Nmax = 1000;
+	double epsilon = 1e-6; // dokladnosc dla metod lokalnych
+	int N = 2; //liczba zmiennych decyzyjnych, czyli x1 i x2
+	int mi, lambda; //liczebnosc bazowa i tymczasowa
+	mi = 100;
+	lambda = 100;
+	//przedzial poszukiwan
+	matrix lb(N, 1), ub(N, 1);
+	for (int i = 0; i < N; ++i) {
+		lb(i, 0) = -5.0; // lub lb(i) zależnie od przeciążenia operatorów w Twojej klasie
+		ub(i, 0) = 5.0;
+	}
 
+	matrix* sigma0 = new matrix[5]{
+	matrix(1, 1, 0.01),
+	matrix(1, 1, 0.1),
+	matrix(1, 1, 1.0),
+	matrix(1, 1, 10.0),
+	matrix(1, 1, 100.0)
+	};
+	matrix sigmatemp = 1;
+	std::srand(std::time(0));
+
+	for (int i = 0; i < 5; i++)
+	{
+
+		for (int j = 0; j < 100; j++)
+		{
+			//sigmatemp = sigma0[i];
+			EA(ff3T, N, lb, ub, mi, lambda, sigmatemp, epsilon, Nmax, ud1, ud2);
+		}
+	}
 }
 
 void lab4()
