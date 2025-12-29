@@ -1,18 +1,6 @@
-﻿  main.cpp
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(79,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(235,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(245,19): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(245,15): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(276,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+﻿  opt_alg.cpp
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(173,23): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(756,53): warning C4267: "=": konwersja z "size_t" do "int", możliwa utrata danych
   user_funs.cpp
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\user_funs.cpp(217,63): error C2665: "cos": żadne z przeciążeń 3 nie może konwertować wszystkich typów argumentów
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\cmath(344,46): message : może to być „long double cos(long double) noexcept”
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\cmath(88,40): message : lub       "float cos(float) noexcept"
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math.h(473,35): message : lub       "double cos(double)"
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\user_funs.cpp(217,63): message : podczas próby dopasowania listy argumentów "(matrix)"
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\user_funs.cpp(217,92): error C2665: "cos": żadne z przeciążeń 3 nie może konwertować wszystkich typów argumentów
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\cmath(344,46): message : może to być „long double cos(long double) noexcept”
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\cmath(88,40): message : lub       "float cos(float) noexcept"
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math.h(473,35): message : lub       "double cos(double)"
-E:\USERS\adawoja2\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\user_funs.cpp(217,92): message : podczas próby dopasowania listy argumentów "(matrix)"
   Generowanie kodu...
+  OptymalizacjaAGH.vcxproj -> C:\Users\User\source\repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe

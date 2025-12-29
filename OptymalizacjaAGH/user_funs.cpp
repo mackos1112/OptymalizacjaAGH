@@ -214,6 +214,6 @@ matrix ff2T(matrix x1, matrix x2, matrix ud1)				// funkcja celu dla przypadku t
 matrix ff3T(matrix x1, matrix ud1, matrix ud2)
 {
 	matrix y;
-	y = pow(x1[0], 2) + pow(x1[1], 2) - cos(2.5 * MATH_PI * x1[0]) - cos(2.5 * MATH_PI * x1[1]) + 2;
+	y = pow(x1(0), 2) + pow(x1(1), 2) - cos(2.5 * MATH_PI * x1(0)) - cos(2.5 * MATH_PI * x1(1)) + 2;
 	return y;
 }
