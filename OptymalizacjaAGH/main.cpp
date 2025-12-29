@@ -231,8 +231,8 @@ void lab2()
 {
 	std::srand(std::time(0));
 
-	matrix ud1(1, 1), ud2;   // macierze pomocnicze
-	double* a = new double[3] {4, 4.4934, 5};
+	matrix ud1(1, 1), ud2(1, 1);   // macierze pomocnicze, tym razem są pomocne bo przekazujemy niektóre parametry do funkcji celu
+	double* a = new double[3] {4, 4.4934, 5}; // wartosci parametru do ograniczen w ff2T
 	double s = 1.0;    // rozmiar poczatkowy simplexu
 	double alpha = 1;  // wspolczynnik odbicia, zwykle 1 z wykladu
 	double beta = 0.5;  // wspolczynnik zawezenia, zwykle 0.5 z wykladu
@@ -241,21 +241,28 @@ void lab2()
 	double epsilon = 1e-3; // dokladnosc dla metod lokalnych
 	int Nmax = 1000;   // maksymalna liczba wywolan funkcji celu
 
+	ofstream Sout("ekspansja_lab2.csv");// definiujemy strumien do pliku .csv
 	for (int i = 0; i < 3; i++)
 	{
-		ud1(0, 0) = a[i]; //parametr do punkcji kary w ff2T
+		ud1(0, 0) = a[i]; //parametr do ograniczen w ff2T
 		for (int j = 0; j < 100; j++)
-		{
-			
-			double x1 = (double)((double)(rand() % 5) + 1); //losowa liczba pomiedzy 1 a 6
-			double x2 = (double)((double)(rand() % 5) + 1); //losowa liczba pomiedzy 1 a 6
-			matrix xin(2, 1); //losowy punkt startowy x1, x2
+		{	
+			//losowanie poczatkowego punktu wewnatrz okregu o promieniu a[i]
+			double x1, x2;
+			do {
+				x1 = 1.0 + static_cast<double>(rand()) / RAND_MAX * (a[i] - 1.0);
+				x2 = 1.0 + static_cast<double>(rand()) / RAND_MAX * (a[i] - 1.0);
+			} while ((x1 * x1 + x2 * x2) > a[i] * a[i]); // odrzucamy punkty poza okręgiem
+
+			matrix xin(2, 1); //zlozenie punktu startowego
 			xin(0, 0) = x1;
 			xin(1, 0) = x2;
 			
-			sym_NM(ff2T, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
+			solution val = sym_NM(ff2T, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
+			Sout << x1 << ";" << x2 << ";" << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << val.ud(0) << ";" << m2d(val.y) << ";" << val.f_calls << "\n";
 		}
 	}
+	Sout.close();
 }
 
 void lab3()

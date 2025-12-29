@@ -483,7 +483,7 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 		Xopt.y = ff(Xopt.x, ud1, ud2);
 		Xopt.f_calls = f_calls;
 		Xopt.flag = 0; // local minimum
-
+		Xopt.ud(0, 0) = std::sqrt(Xopt.x(0, 0) * Xopt.x(0, 0) + Xopt.x(1, 0) * Xopt.x(1, 0));
 		return Xopt;
 	}
 	catch (string ex_info)

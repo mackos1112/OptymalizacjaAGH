@@ -202,14 +202,6 @@ matrix ff_tanks(matrix x, matrix ud1, matrix ud2)
 	return y;
 }
 
-//matrix ff2T(matrix x1, matrix x2, matrix ud1)				// funkcja celu dla przypadku testowego
-//{
-//	matrix y;												// y zawiera wartosc funkcji celu
-//	matrix pom = MATH_PI * pow(pow(m2d(x1) / MATH_PI, 2) + pow(m2d(x2) / MATH_PI, 2), 0.5);
-//	y = sin(m2d(pom)) / m2d(pom);
-//
-//	return y;
-//}
 matrix ff2T(matrix x, matrix ud1, matrix ud2) 
 {
     double X1 = m2d(x(0));
@@ -219,7 +211,7 @@ matrix ff2T(matrix x, matrix ud1, matrix ud2)
     double c  = 0.5;                // początkowy współczynnik kary
     double alfa = 2.0;              // współczynnik skalowania kary
 
-    // ===== funkcja celu =====
+    //funkcja celu
     double r = sqrt(pow(X1 / MATH_PI, 2) + pow(X2 / MATH_PI, 2));
     double f;
     if (r == 0.0)
@@ -227,19 +219,18 @@ matrix ff2T(matrix x, matrix ud1, matrix ud2)
     else
         f = sin(MATH_PI * r) / (MATH_PI * r);
 
-    // ===== ograniczenia =====
+    //ograniczenia
     double g1 = -X1 + 1.0;
     double g2 = -X2 + 1.0;
     double g3 = sqrt(X1*X1 + X2*X2) - a;
 
-    // ===== zewnetrzna funkcja kary =====
+	//sprawdzenie ograniczeń i ewentualne dodanie kary
     double S = 0.0;
     S += pow(std::max(0.0, g1), 2);
     S += pow(std::max(0.0, g2), 2);
     S += pow(std::max(0.0, g3), 2);
 
-    // ===== końcowy wynik =====
-    if (S > 0.0) // przekroczenie ograniczeń -> dodajemy karę
+    if (S > 0.0)
     {
         double mu = c * pow(alfa, k); 
         f += mu * S;
