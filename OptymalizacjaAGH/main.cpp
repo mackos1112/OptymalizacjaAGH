@@ -231,19 +231,19 @@ void lab2()
 {
 	std::srand(std::time(0));
 
-	matrix ud1, ud2;   // macierze pomocnicze
-	double* alphat = new double[3] {4, 4.4934, 5};
+	matrix ud1(1, 1), ud2;   // macierze pomocnicze
+	double* a = new double[3] {4, 4.4934, 5};
 	double s = 1.0;    // rozmiar poczatkowy simplexu
-	double alpha;  // wspolczynnik odbicia
+	double alpha = 1;  // wspolczynnik odbicia, zwykle 1 z wykladu
 	double beta = 0.5;  // wspolczynnik zawezenia, zwykle 0.5 z wykladu
 	double gamma = 2.0; // wspolczynnik ekspansji, zwykle 2 z wykladu
 	double delta = 0.5; // wspolczynnik kontrakcji, zwykle 0.5 z wykladu
-	double epsilon = 1e-2; // dokladnosc dla metod lokalnych
-	int Nmax = 1000000;   // maksymalna liczba wywolan funkcji celu
+	double epsilon = 1e-3; // dokladnosc dla metod lokalnych
+	int Nmax = 1000;   // maksymalna liczba wywolan funkcji celu
 
 	for (int i = 0; i < 3; i++)
 	{
-		alpha = alphat[i]; // wspolczynnik odbicia, zwykle 1 z wykladu
+		ud1(0, 0) = a[i]; //parametr do punkcji kary w ff2T
 		for (int j = 0; j < 100; j++)
 		{
 			
