@@ -268,12 +268,12 @@ void lab2()
 void lab3()
 {
 	matrix ud1, ud2;   // macierze pomocnicze
-	double epsilon = 1e-6; // dokladnosc dla metod lokalnych
+	double epsilon = 1e-4; // dokladnosc dla metod lokalnych
 	int N = 2; //liczba zmiennych decyzyjnych, czyli x1 i x2
 	int mi, lambda; //liczebnosc bazowa i tymczasowa, gdy duzo minimumow to zwiekszamy lambda
-	mi = 100;
-	lambda = 200;
-	int Nmax = 1000 * mi * lambda;
+	mi = 50;
+	lambda = 100;
+	int Nmax = 100000;
 	//przedzial poszukiwan [{-5,-5},{5,5}]
 	matrix lb(N, 1), ub(N, 1);
 	for (int i = 0; i < N; ++i) {
@@ -290,16 +290,18 @@ void lab3()
 	};
 	//matrix sigmatemp = 1;
 	std::srand(std::time(0));
-
+	ofstream Sout("EA_lab3.csv");// definiujemy strumien do pliku .csv
 	for (int i = 0; i < 5; i++)
 	{
 
 		for (int j = 0; j < 100; j++)
 		{
 			matrix sigmatemp = sigma0[i];
-			EA(ff3T, N, lb, ub, mi, lambda, sigmatemp, epsilon, Nmax, ud1, ud2);
+			solution val = EA(ff3T, N, lb, ub, mi, lambda, sigmatemp, epsilon, Nmax, ud1, ud2);
+			Sout << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << m2d(val.y) << ";" << val.f_calls << ";" << val.flag << "\n";
 		}
 	}
+	Sout.close();
 }
 
 void lab4()

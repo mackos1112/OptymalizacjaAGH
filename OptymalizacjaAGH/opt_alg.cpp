@@ -573,7 +573,7 @@ solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, in
 	try
 	{
 		solution Xopt;
-
+		int f_calls = 0;
 		// Implementation based on provided pseudocode.
 		// Parameters:
 		// N       - number of variables
@@ -644,11 +644,13 @@ solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, in
 			}
 
 			// evaluate fitness
+			++f_calls;
 			ind.s.fit_fun(ff, ud1, ud2);
 
 			P.push_back(ind);
 			if (solution::f_calls > Nmax) {
 				Xopt = P[0].s;
+				Xopt.f_calls = f_calls;
 				Xopt.flag = 0;
 				return Xopt;
 			}
@@ -740,6 +742,7 @@ solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, in
 				}
 
 				// evaluate child
+				++f_calls;
 				child.s.fit_fun(ff, ud1, ud2);
 
 				T.push_back(child);
@@ -758,6 +761,7 @@ solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, in
 					}
 					Xopt = unionPT[bestIdx].s;
 					Xopt.flag = 0;
+					Xopt.f_calls = f_calls;
 					return Xopt;
 				}
 			} // end offspring generation
@@ -787,15 +791,18 @@ solution EA(matrix(*ff)(matrix, matrix, matrix), int N, matrix lb, matrix ub, in
 			// check stopping criteria
 			if (m2d(Xopt.y) < epsilon) {
 				Xopt.flag = 1;
+				Xopt.f_calls = f_calls;	
 				return Xopt;
 			}
 			if (solution::f_calls > Nmax) {
 				Xopt.flag = 0;
+				Xopt.f_calls = f_calls;
 				return Xopt;
 			}
 
 			iter++;
 		}
+		Xopt.f_calls = f_calls;
 
 		return Xopt;
 	}
