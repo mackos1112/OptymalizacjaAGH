@@ -202,14 +202,30 @@ matrix ff_tanks(matrix x, matrix ud1, matrix ud2)
 	return y;
 }
 
-matrix ff2T(matrix x1, matrix x2, matrix ud1)				// funkcja celu dla przypadku testowego
+//matrix ff2T(matrix x1, matrix x2, matrix ud1)				// funkcja celu dla przypadku testowego
+//{
+//	matrix y;												// y zawiera wartosc funkcji celu
+//	matrix pom = MATH_PI * pow(pow(m2d(x1) / MATH_PI, 2) + pow(m2d(x2) / MATH_PI, 2), 0.5);
+//	y = sin(m2d(pom)) / m2d(pom);
+//
+//	return y;
+//}
+matrix ff2T(matrix x, matrix ud1, matrix ud2)
 {
-	matrix y;												// y zawiera wartosc funkcji celu
-	matrix pom = MATH_PI * pow(pow(m2d(x1) / MATH_PI, 2) + pow(m2d(x2) / MATH_PI, 2), 0.5);
-	y = sin(m2d(pom)) / m2d(pom);
+	double x1 = x(0, 0);
+	double x2 = x(1, 0);
 
-	return y;
+	double r = sqrt(pow(x1 / MATH_PI, 2) + pow(x2 / MATH_PI, 2));
+
+	double val;
+	if (r == 0.0)
+		val = 1.0;
+	else
+		val = sin(MATH_PI * r) / (MATH_PI * r);
+
+	return matrix(val);
 }
+
 
 matrix ff3T(matrix x1, matrix ud1, matrix ud2)
 {

@@ -1,6 +1,7 @@
-﻿  opt_alg.cpp
-C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(173,23): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
-C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\opt_alg.cpp(756,53): warning C4267: "=": konwersja z "size_t" do "int", możliwa utrata danych
+﻿  main.cpp
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(79,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(235,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(279,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
   user_funs.cpp
   Generowanie kodu...
   OptymalizacjaAGH.vcxproj -> C:\Users\User\source\repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe

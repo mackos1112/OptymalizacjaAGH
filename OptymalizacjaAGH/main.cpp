@@ -24,10 +24,10 @@ int main()
 	try
 	{
 		//TODO: lab 2
-		//lab2();
+		lab2();
 
 		//TODO: lab 3
-		lab3();
+		//lab3();
 	}
 	catch (string EX_INFO)
 	{
@@ -242,7 +242,10 @@ void lab2()
 			
 			double x0 = (double)((double)(rand() % 3) + 1); //losowa liczba pomiedzy 1 a 4
 			double x1 = (double)((double)(rand() % 3) + 1); //losowa liczba pomiedzy 1 a 4
-			matrix xin(x0, x1);
+			matrix xin(2, 1);
+			xin(0, 0) = x0;
+			xin(1, 0) = x1;
+
 
 			sym_NM(ff2T, xin, 1.0, 1.0, 0.5, 2.0, 0.5, 0.001, 100, ud1, ud2);
 		}
