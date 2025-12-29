@@ -229,25 +229,31 @@ void lab1()
 
 void lab2()
 {
-	matrix ud1, ud2;   // macierze pomocnicze
-
-	double* alphat = new double[3] {4, 4.4934, 5};
 	std::srand(std::time(0));
+
+	matrix ud1, ud2;   // macierze pomocnicze
+	double* alphat = new double[3] {4, 4.4934, 5};
+	double s = 1.0;    // rozmiar poczatkowy simplexu
+	double alpha;  // wspolczynnik odbicia
+	double beta = 0.5;  // wspolczynnik zawezenia, zwykle 0.5 z wykladu
+	double gamma = 2.0; // wspolczynnik ekspansji, zwykle 2 z wykladu
+	double delta = 0.5; // wspolczynnik kontrakcji, zwykle 0.5 z wykladu
+	double epsilon = 1e-2; // dokladnosc dla metod lokalnych
+	int Nmax = 1000000;   // maksymalna liczba wywolan funkcji celu
 
 	for (int i = 0; i < 3; i++)
 	{
-
+		alpha = alphat[i]; // wspolczynnik odbicia, zwykle 1 z wykladu
 		for (int j = 0; j < 100; j++)
 		{
 			
-			double x0 = (double)((double)(rand() % 3) + 1); //losowa liczba pomiedzy 1 a 4
-			double x1 = (double)((double)(rand() % 3) + 1); //losowa liczba pomiedzy 1 a 4
-			matrix xin(2, 1);
-			xin(0, 0) = x0;
-			xin(1, 0) = x1;
-
-
-			sym_NM(ff2T, xin, 1.0, 1.0, 0.5, 2.0, 0.5, 0.001, 100, ud1, ud2);
+			double x1 = (double)((double)(rand() % 5) + 1); //losowa liczba pomiedzy 1 a 6
+			double x2 = (double)((double)(rand() % 5) + 1); //losowa liczba pomiedzy 1 a 6
+			matrix xin(2, 1); //losowy punkt startowy x1, x2
+			xin(0, 0) = x1;
+			xin(1, 0) = x2;
+			
+			sym_NM(ff2T, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
 		}
 	}
 }
