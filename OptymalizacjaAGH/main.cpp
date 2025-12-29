@@ -23,11 +23,11 @@ int main()
 {
 	try
 	{
-		//TODO: lab 2
-		lab2();
+		//TODO: lab 2 symulacja
+		//lab2();
 
-		//TODO: lab 3
-		//lab3();
+		//TODO: lab 3 testowa funkcja celu, symulacja
+		lab3();
 	}
 	catch (string EX_INFO)
 	{
@@ -268,27 +268,27 @@ void lab2()
 void lab3()
 {
 	matrix ud1, ud2;   // macierze pomocnicze
-	int Nmax = 1000;
 	double epsilon = 1e-6; // dokladnosc dla metod lokalnych
 	int N = 2; //liczba zmiennych decyzyjnych, czyli x1 i x2
-	int mi, lambda; //liczebnosc bazowa i tymczasowa
+	int mi, lambda; //liczebnosc bazowa i tymczasowa, gdy duzo minimumow to zwiekszamy lambda
 	mi = 100;
-	lambda = 100;
-	//przedzial poszukiwan
+	lambda = 200;
+	int Nmax = 1000 * mi * lambda;
+	//przedzial poszukiwan [{-5,-5},{5,5}]
 	matrix lb(N, 1), ub(N, 1);
 	for (int i = 0; i < N; ++i) {
-		lb(i, 0) = -5.0; // lub lb(i) zależnie od przeciążenia operatorów w Twojej klasie
+		lb(i, 0) = -5.0;
 		ub(i, 0) = 5.0;
 	}
 
-	matrix* sigma0 = new matrix[5]{
+	matrix* sigma0 = new matrix[5]{ //poczatkowy wspolczynnik mutacji
 	matrix(1, 1, 0.01),
 	matrix(1, 1, 0.1),
 	matrix(1, 1, 1.0),
 	matrix(1, 1, 10.0),
 	matrix(1, 1, 100.0)
 	};
-	matrix sigmatemp = 1;
+	//matrix sigmatemp = 1;
 	std::srand(std::time(0));
 
 	for (int i = 0; i < 5; i++)
@@ -296,7 +296,7 @@ void lab3()
 
 		for (int j = 0; j < 100; j++)
 		{
-			//sigmatemp = sigma0[i];
+			matrix sigmatemp = sigma0[i];
 			EA(ff3T, N, lb, ub, mi, lambda, sigmatemp, epsilon, Nmax, ud1, ud2);
 		}
 	}
