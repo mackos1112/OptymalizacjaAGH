@@ -370,7 +370,7 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 			ud2(0, 0) = f_calls;
 			matrix Y = ff(X, ud1, ud2);
 			++f_calls;
-			return Y(0, 0);
+			return -Y(0, 0);
 			};
 
 		// compute initial function values

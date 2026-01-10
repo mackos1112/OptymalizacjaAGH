@@ -24,14 +24,8 @@ int main()
 	try
 	{
 		//TODO: lab 2 symulacja
-		//lab2();
-		matrix test(2,1);
-		test(0, 0) = 5.0; //predkosc poczatkowa
-		test(1, 0) = 10.0;  //kat wyrzutu
-
-		matrix ud1, ud2;
-		cout << ff_ball(test, ud1, ud2);
-
+		lab2();
+	
 		//TODO: lab 3 symulacja
 		//lab3();
 	}
@@ -265,7 +259,7 @@ void lab2()
 			xin(1, 0) = x2;
 			
 			solution val = sym_NM(ff2T, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
-			Sout << x1 << ";" << x2 << ";" << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << val.ud(0) << ";" << m2d(val.y) << ";" << val.f_calls << "\n";
+			//Sout << x1 << ";" << x2 << ";" << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << val.ud(0) << ";" << m2d(val.y) << ";" << val.f_calls << "\n";
 		}
 	}
 	Sout.close();
@@ -274,6 +268,17 @@ void lab2()
 	cout << "\n=== Problem rzeczywisty - optymalizacja DA z ograniczeniami - rzut pilka ===\n" << endl;
 	solution::clear_calls();
 	// Parametry optymalizacji
+	//przedzial poszukiwan [{-10,10},{-10,10}]
+	/*double x1, x2;
+	x1 = static_cast<double>(rand()) / RAND_MAX * 21 - 10;
+	x2 = static_cast<double>(rand()) / RAND_MAX * 21 - 10;*/
+	matrix xin(2, 1); //zlozenie punktu startowego
+	xin(0, 0) = 5;
+	xin(1, 0) = 10;
+
+	solution opt = sym_NM(ff_ball, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
+	cout << m2d(opt.x(0)) << ";" << m2d(opt.x(1)) << ";" << opt.ud(0) << ";" << m2d(opt.y(0)) << ";" << opt.f_calls << "\n";
+
 }
 
 void lab3()

@@ -240,7 +240,7 @@ matrix ff2T(matrix x, matrix ud1, matrix ud2)
 }
 
 matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
-	matrix xend;	//wynik funkcji celu - odleglosc w poziomie
+	matrix xend(2, 1);	//wynik funkcji celu - odleglosc w poziomie
 
 	//parametry
 	double g = 9.81;      //m/s^2
@@ -253,6 +253,10 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 	double S = MATH_PI * r * r; //pole przekroju poprzecznego
 	double dt = 0.01; //s
 	double tend = 7.0; //s
+	double R = 2.0; //promien kosza
+	double k = ud2(0, 0);         // numer wywołania funkcji celu do dokopania karze
+	double c = 0.5;                // początkowy współczynnik kary
+	double alfa = 2.0;              // współczynnik skalowania kary
 
 	//zmienne decyzyjne
 	double v0x = m2d(x(0, 0));      //predkosc poczatkowa m/s [-10, 10] m/s
@@ -268,6 +272,7 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 	double FMy = ro * vx * omega * MATH_PI * r * r * r; //sila Magnusa w pionie
 
 	//symulacja lotu
+	double odleglosc = 100; //inicjalizacja minimalnej odleglosci od kosza (jak jest 100 to zle)
 
 	for (double t = 0; t <= tend; t += dt) {
 		//aktualizacja sil oporu i Magnusa
@@ -284,8 +289,19 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 		X += vx * dt;
 		Y += vy * dt;
 		
+		if (Y < 50 + R && Y > 50 - R)
+		{
+			double temp = sqrt(pow(X - 5, 2) + pow(Y - 50, 2));
+			if (temp < odleglosc) odleglosc = temp;
+		}
+
 		if (Y <= 0.0) break; //pilnowanie ladowania na ziemi
-		cout << t << ", " << X << "," << Y << endl;
+		//cout << t << ", " << X << "," << Y << endl;
+	}
+	if (odleglosc > R)
+	{
+		double mu = c * pow(alfa, k);
+		X -= mu * (odleglosc-R);
 	}
 	xend(0) = X; //odleglosc w poziomie
 
