@@ -1,4 +1,7 @@
 #include"user_funs.h"
+#include <cmath>
+
+#define MATH_PI 3.1415926
 
 matrix ff0T(matrix x, matrix ud1, matrix ud2)				// funkcja celu dla przypadku testowego
 {
@@ -199,3 +202,134 @@ matrix ff_tanks(matrix x, matrix ud1, matrix ud2)
 	return y;
 }
 
+matrix ff2T(matrix x, matrix ud1, matrix ud2) 
+{
+    double X1 = m2d(x(0));
+	double X2 = m2d(x(1));
+    double a  = ud1(0, 0);         // parametr ograniczenia 4, 4.4934, 5
+    double k  = ud2(0, 0);         // numer wywołania funkcji celu do dokopania karze
+    double c  = 0.5;                // początkowy współczynnik kary
+    double alfa = 2.0;              // współczynnik skalowania kary
+
+    //funkcja celu
+    double r = sqrt(pow(X1 / MATH_PI, 2) + pow(X2 / MATH_PI, 2));
+    double f;
+    if (r == 0.0)
+        f = 1.0;
+    else
+        f = sin(MATH_PI * r) / (MATH_PI * r);
+
+    //ograniczenia
+    double g1 = -X1 + 1.0;
+    double g2 = -X2 + 1.0;
+    double g3 = sqrt(X1*X1 + X2*X2) - a;
+
+	//sprawdzenie ograniczeń i ewentualne dodanie kary
+    double S = 0.0;
+    S += pow(std::max(0.0, g1), 2);
+    S += pow(std::max(0.0, g2), 2);
+    S += pow(std::max(0.0, g3), 2);
+
+    if (S > 0.0)
+    {
+        double mu = c * pow(alfa, k); 
+        f += mu * S;
+    }
+
+    return matrix(f);
+}
+
+matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
+	matrix xend(1, 2);	//wynik funkcji celu - odleglosc w poziomie
+
+	//parametry
+	double g = 9.81;      //m/s^2
+	double m = 0.6;    //kg
+	double r = 0.12;     //m
+	double Y = 100.0;   //m
+	double X = 0.0;    //m
+	double C = 0.47;  //wspolczynnik oporu
+	double ro = 1.2; //gestosc powietrza kg/m^3
+	double S = MATH_PI * r * r; //pole przekroju poprzecznego
+	double dt = 0.01; //s
+	double tend = 7.0; //s
+
+	double R = 2.0; //promien kosza
+	double c = ud2(0, 0);         // numer wywołania funkcji celu do dokopania karze
+	double alfa = 2.0;              // współczynnik skalowania kary
+
+	//zmienne decyzyjne
+	double v0x = m2d(x(0, 0));      //predkosc poczatkowa m/s [-10, 10] m/s
+	double omega = m2d(x(1, 0));	//predkosc obrotowa radiany	[-10, 10] rad/s
+
+	//cout << "v0x: " << v0x << ", omega: " << omega << endl;
+
+	double vx = v0x;  //poczatkowa predkosc w poziomie
+	double vy = 0; //predkosc w pionie
+
+	double Dx = C * ro * S * vx * abs(vx) / 2.0; //sila oporu w poziomie
+	double Dy = C * ro * S * vy * abs(vy) / 2.0; //sila oporu w pionie
+	double FMx = ro * vy * omega * MATH_PI * r * r * r; //sila Magnusa w poziomie
+	double FMy = ro * vx * omega * MATH_PI * r * r * r; //sila Magnusa w pionie
+
+	//symulacja lotu
+	double odleglosc = 100; //inicjalizacja minimalnej odleglosci od kosza (jak jest 100 to zle)
+
+
+	for (double t = 0; t <= tend; t += dt) {
+		//aktualizacja sil oporu i Magnusa
+		Dx = C * ro * S * vx * abs(vx) / 2.0;
+		Dy = C * ro * S * vy * abs(vy) / 2.0;
+		FMx = ro * vy * omega * MATH_PI * r * r * r;
+		FMy = ro * vx * omega * MATH_PI * r * r * r;
+
+		double ax = (-Dx - FMx) / m; //przyspieszenie w poziomie
+		double ay = (-m * g - Dy - FMy) / m; //przyspieszenie w pionie
+		//cout << ax << ", " << ay << endl;
+		vx += ax * dt;
+		vy += ay * dt;
+		
+		Y += vy * dt;
+		if (Y <= 0.0) break; //pilnowanie ladowania na ziemi
+		X += vx * dt;
+
+		if (Y < 50 + R && Y > 50 - R)
+		{
+			double temp = sqrt(pow(X - 5, 2) + pow(Y - 50, 2));
+			if (temp < odleglosc) odleglosc = temp;
+		}
+
+		
+		//cout << t << ";" << X << ";" << Y << endl;
+	}
+	//cout << "Koniec symulacji. x_end: " << X << ", y_end: " << Y << ", odleglosc od kosza: " << odleglosc << endl;
+	// Definicja ograniczeń g(x) <= 0 [cite: 67, 68]
+	double g1 = odleglosc - R; // max 2m od (5,50)
+	double g2 = v0x - 10.0;               // v0x <= 10
+	double g3 = -10.0 - v0x;              // v0x >= -10
+	double g4 = omega - 10.0;             // omega <= 10
+	double g5 = -10.0 - omega;            // omega >= -10
+
+	// Zewnętrzna funkcja kary: S = suma(max(0, gi)^2) [cite: 76]
+	double kara = 0;
+	if (g1 > 0) kara += pow(g1, 2);
+	if (g2 > 0) kara += pow(g2, 2);
+	if (g3 > 0) kara += pow(g3, 2);
+	if (g4 > 0) kara += pow(g4, 2);
+	if (g5 > 0) kara += pow(g5, 2);
+
+	// Funkcja celu NM (minimalizacja): -dystans + kara
+	xend(0, 0) = X - c * kara; //odleglosc w poziomie
+
+	xend(0, 1) = odleglosc; //dystans od kosza
+
+	return xend;
+
+}
+
+matrix ff3T(matrix x1, matrix ud1, matrix ud2)
+{
+	matrix y;
+	y = pow(x1(0), 2) + pow(x1(1), 2) - cos(2.5 * MATH_PI * x1(0)) - cos(2.5 * MATH_PI * x1(1)) + 2;
+	return y;
+}
