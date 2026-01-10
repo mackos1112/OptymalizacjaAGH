@@ -240,7 +240,7 @@ matrix ff2T(matrix x, matrix ud1, matrix ud2)
 }
 
 matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
-	matrix xend(2, 1);	//wynik funkcji celu - odleglosc w poziomie
+	matrix xend(1, 2);	//wynik funkcji celu - odleglosc w poziomie
 
 	//parametry
 	double g = 9.81;      //m/s^2
@@ -253,14 +253,16 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 	double S = MATH_PI * r * r; //pole przekroju poprzecznego
 	double dt = 0.01; //s
 	double tend = 7.0; //s
+
 	double R = 2.0; //promien kosza
+	double c = ud1(0, 0);                // wspolczynnik kary przekazany z lab2
 	double k = ud2(0, 0);         // numer wywołania funkcji celu do dokopania karze
-	double c = 0.5;                // początkowy współczynnik kary
 	double alfa = 2.0;              // współczynnik skalowania kary
 
 	//zmienne decyzyjne
 	double v0x = m2d(x(0, 0));      //predkosc poczatkowa m/s [-10, 10] m/s
-	double omega = m2d(x(1, 0));    //predkosc obrotowa radiany	[-10, 10] rad/s
+	double omega = m2d(x(1, 0));	//predkosc obrotowa radiany	[-10, 10] rad/s
+
 	//cout << "v0x: " << v0x << ", omega: " << omega << endl;
 
 	double vx = v0x;  //poczatkowa predkosc w poziomie
@@ -273,6 +275,7 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 
 	//symulacja lotu
 	double odleglosc = 100; //inicjalizacja minimalnej odleglosci od kosza (jak jest 100 to zle)
+
 
 	for (double t = 0; t <= tend; t += dt) {
 		//aktualizacja sil oporu i Magnusa
@@ -298,12 +301,26 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 		if (Y <= 0.0) break; //pilnowanie ladowania na ziemi
 		//cout << t << ", " << X << "," << Y << endl;
 	}
-	if (odleglosc > R)
-	{
-		double mu = c * pow(alfa, k);
-		X -= mu * (odleglosc-R);
-	}
-	xend(0) = X; //odleglosc w poziomie
+
+	// Definicja ograniczeń g(x) <= 0 [cite: 67, 68]
+	double g1 = odleglosc - R; // max 2m od (5,50)
+	double g2 = v0x - 10.0;               // v0x <= 10
+	double g3 = -10.0 - v0x;              // v0x >= -10
+	double g4 = omega - 10.0;             // omega <= 10
+	double g5 = -10.0 - omega;            // omega >= -10
+
+	// Zewnętrzna funkcja kary: S = suma(max(0, gi)^2) [cite: 76]
+	double kara = 0;
+	if (g1 > 0) kara += pow(g1, 2);
+	if (g2 > 0) kara += pow(g2, 2);
+	if (g3 > 0) kara += pow(g3, 2);
+	if (g4 > 0) kara += pow(g4, 2);
+	if (g5 > 0) kara += pow(g5, 2);
+
+	// Funkcja celu NM (minimalizacja): -dystans + kara
+	xend(0, 0) = X - c * kara; //odleglosc w poziomie
+
+  xend(0, 1) = odleglosc; //dystans od kosza
 
 	return xend;
 

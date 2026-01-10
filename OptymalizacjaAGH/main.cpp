@@ -239,7 +239,7 @@ void lab2()
 	double gamma = 2.0; // wspolczynnik ekspansji, zwykle 2 z wykladu
 	double delta = 0.5; // wspolczynnik kontrakcji, zwykle 0.5 z wykladu
 	double epsilon = 1e-3; // dokladnosc dla metod lokalnych
-	int Nmax = 1000;   // maksymalna liczba wywolan funkcji celu
+	int Nmax = 2000;   // maksymalna liczba wywolan funkcji celu
 
 	ofstream Sout("ekspansja_lab2.csv");// definiujemy strumien do pliku .csv
 	for (int i = 0; i < 3; i++)
@@ -275,10 +275,40 @@ void lab2()
 	matrix xin(2, 1); //zlozenie punktu startowego
 	xin(0, 0) = 5;
 	xin(1, 0) = 10;
+	double c = 1.0;	// poczatkowy wspolczynnik kary
+	double a_scale = 4.0; // wspolczynnik skalowania kary
+	
+	matrix x_old;
+	solution opt;
 
-	solution opt = sym_NM(ff_ball, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
-	cout << m2d(opt.x(0)) << ";" << m2d(opt.x(1)) << ";" << opt.ud(0) << ";" << m2d(opt.y(0)) << ";" << opt.f_calls << "\n";
 
+	//solution opt = sym_NM(ff_ball, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
+	//cout << m2d(opt.x(0)) << ";" << m2d(opt.x(1)) << ";" << opt.ud(0) << ";" << m2d(opt.y(0)) << ";" << opt.f_calls << "\n";
+
+	// Pętla zewnętrzna metody funkcji kary
+	for (int i = 0; i < 10; ++i) {
+		ud1(0, 0) = c; // Przekazujemy aktualne 'c' do funkcji ff_ball
+		x_old = xin;
+
+		// Wywołanie NM dla aktualnego współczynnika kary
+		opt = sym_NM(ff_ball, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
+
+		xin = opt.x; // Nowy punkt startowy to wynik poprzedniej optymalizacji
+
+		cout << "Iteracja " << i << ": v0x=" << xin(0,0) 
+			<< ", omega=" << xin(1,0) 
+			<< ", x_end=" << m2d(opt.y(0,0)) * -1 // odwracamy minus z funkcji celu
+			<< ", c=" << c << endl;
+
+		c *= a_scale; // Zwiększenie kary
+	}
+
+	// Wynik końcowy
+	cout << "\nZAKONCZONO OPTYMALIZACJE:" << endl;
+	cout << "Najlepsze v0x: " << opt.x(0, 0) << " m/s" << endl;
+	cout << "Najlepsza omega: " << opt.x(1, 0) << " rad/s" << endl;
+	cout << "Maksymalny zasieg x_end: " << opt.y(0,0) << " m" << endl;
+	cout << "Minimalna odleglosc od srodka kosza (5,50): " << opt.y(0, 1) << " m" << endl;
 }
 
 void lab3()

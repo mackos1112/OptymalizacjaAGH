@@ -1,1 +1,5 @@
-﻿  OptymalizacjaAGH.vcxproj -> C:\Users\User\source\repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
+﻿  main.cpp
+C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(79,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(232,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(338,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  OptymalizacjaAGH.vcxproj -> C:\Users\Adam\.cursor-tutor\AGH\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
