@@ -1,4 +1,7 @@
 #include"user_funs.h"
+#include <cmath>
+
+#define MATH_PI 3.1415926
 
 matrix ff0T(matrix x, matrix ud1, matrix ud2)				// funkcja celu dla przypadku testowego
 {
@@ -199,3 +202,48 @@ matrix ff_tanks(matrix x, matrix ud1, matrix ud2)
 	return y;
 }
 
+matrix ff2T(matrix x, matrix ud1, matrix ud2) 
+{
+    double X1 = m2d(x(0));
+	double X2 = m2d(x(1));
+    double a  = ud1(0, 0);         // parametr ograniczenia 4, 4.4934, 5
+    double k  = ud2(0, 0);         // numer wywołania funkcji celu do dokopania karze
+    double c  = 0.5;                // początkowy współczynnik kary
+    double alfa = 2.0;              // współczynnik skalowania kary
+
+    //funkcja celu
+    double r = sqrt(pow(X1 / MATH_PI, 2) + pow(X2 / MATH_PI, 2));
+    double f;
+    if (r == 0.0)
+        f = 1.0;
+    else
+        f = sin(MATH_PI * r) / (MATH_PI * r);
+
+    //ograniczenia
+    double g1 = -X1 + 1.0;
+    double g2 = -X2 + 1.0;
+    double g3 = sqrt(X1*X1 + X2*X2) - a;
+
+	//sprawdzenie ograniczeń i ewentualne dodanie kary
+    double S = 0.0;
+    S += pow(std::max(0.0, g1), 2);
+    S += pow(std::max(0.0, g2), 2);
+    S += pow(std::max(0.0, g3), 2);
+
+    if (S > 0.0)
+    {
+        double mu = c * pow(alfa, k); 
+        f += mu * S;
+    }
+
+    return matrix(f);
+}
+
+
+
+matrix ff3T(matrix x1, matrix ud1, matrix ud2)
+{
+	matrix y;
+	y = pow(x1(0), 2) + pow(x1(1), 2) - cos(2.5 * MATH_PI * x1(0)) - cos(2.5 * MATH_PI * x1(1)) + 2;
+	return y;
+}
