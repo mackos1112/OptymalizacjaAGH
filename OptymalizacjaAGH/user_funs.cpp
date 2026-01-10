@@ -255,8 +255,7 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 	double tend = 7.0; //s
 
 	double R = 2.0; //promien kosza
-	double c = ud1(0, 0);                // wspolczynnik kary przekazany z lab2
-	double k = ud2(0, 0);         // numer wywołania funkcji celu do dokopania karze
+	double c = ud2(0, 0);         // numer wywołania funkcji celu do dokopania karze
 	double alfa = 2.0;              // współczynnik skalowania kary
 
 	//zmienne decyzyjne
@@ -289,19 +288,21 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 		//cout << ax << ", " << ay << endl;
 		vx += ax * dt;
 		vy += ay * dt;
-		X += vx * dt;
-		Y += vy * dt;
 		
+		Y += vy * dt;
+		if (Y <= 0.0) break; //pilnowanie ladowania na ziemi
+		X += vx * dt;
+
 		if (Y < 50 + R && Y > 50 - R)
 		{
 			double temp = sqrt(pow(X - 5, 2) + pow(Y - 50, 2));
 			if (temp < odleglosc) odleglosc = temp;
 		}
 
-		if (Y <= 0.0) break; //pilnowanie ladowania na ziemi
-		//cout << t << ", " << X << "," << Y << endl;
+		
+		cout << t << ";" << X << ";" << Y << endl;
 	}
-
+	cout << "Koniec symulacji. x_end: " << X << ", y_end: " << Y << ", odleglosc od kosza: " << odleglosc << endl;
 	// Definicja ograniczeń g(x) <= 0 [cite: 67, 68]
 	double g1 = odleglosc - R; // max 2m od (5,50)
 	double g2 = v0x - 10.0;               // v0x <= 10
@@ -320,7 +321,7 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 	// Funkcja celu NM (minimalizacja): -dystans + kara
 	xend(0, 0) = X - c * kara; //odleglosc w poziomie
 
-  xend(0, 1) = odleglosc; //dystans od kosza
+	xend(0, 1) = odleglosc; //dystans od kosza
 
 	return xend;
 

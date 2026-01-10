@@ -24,8 +24,9 @@ int main()
 	try
 	{
 		//TODO: lab 2 symulacja
-		lab2();
-	
+		//lab2();
+		ff_ball(matrix(2, new double[2] {-0.0375986, 9.93978}), matrix(1, new double[1] {0.1}), matrix(1, new double[1] {1}));
+		
 		//TODO: lab 3 symulacja
 		//lab3();
 	}
@@ -273,10 +274,8 @@ void lab2()
 	x1 = static_cast<double>(rand()) / RAND_MAX * 21 - 10;
 	x2 = static_cast<double>(rand()) / RAND_MAX * 21 - 10;*/
 	matrix xin(2, 1); //zlozenie punktu startowego
-	xin(0, 0) = 5;
-	xin(1, 0) = 10;
-	double c = 1.0;	// poczatkowy wspolczynnik kary
-	double a_scale = 4.0; // wspolczynnik skalowania kary
+	xin(0, 0) = 0;
+	xin(1, 0) = 0;
 	
 	matrix x_old;
 	solution opt;
@@ -286,8 +285,7 @@ void lab2()
 	//cout << m2d(opt.x(0)) << ";" << m2d(opt.x(1)) << ";" << opt.ud(0) << ";" << m2d(opt.y(0)) << ";" << opt.f_calls << "\n";
 
 	// Pętla zewnętrzna metody funkcji kary
-	for (int i = 0; i < 10; ++i) {
-		ud1(0, 0) = c; // Przekazujemy aktualne 'c' do funkcji ff_ball
+
 		x_old = xin;
 
 		// Wywołanie NM dla aktualnego współczynnika kary
@@ -295,13 +293,12 @@ void lab2()
 
 		xin = opt.x; // Nowy punkt startowy to wynik poprzedniej optymalizacji
 
-		cout << "Iteracja " << i << ": v0x=" << xin(0,0) 
+		cout << "v0x=" << xin(0,0) 
 			<< ", omega=" << xin(1,0) 
-			<< ", x_end=" << m2d(opt.y(0,0)) * -1 // odwracamy minus z funkcji celu
-			<< ", c=" << c << endl;
-
-		c *= a_scale; // Zwiększenie kary
-	}
+			<< ", x_end=" << m2d(opt.y(0,0))
+			<< ", liczba krokow optymalizacji=" << opt.f_calls
+			<< endl;
+	
 
 	// Wynik końcowy
 	cout << "\nZAKONCZONO OPTYMALIZACJE:" << endl;

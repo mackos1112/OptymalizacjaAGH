@@ -354,6 +354,9 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 
 		// Nelder-Mead simplex method (sympleks Neldera-Meada) implementation
 		int n = 2; // dimension of the problem
+		double pen_alpha = 4.0; //penalty function parameters
+		double pen_c = 1.0;
+		int it = 0;
 
 		// initialize simplex points p0 = x0, pi = x0 + s*ei for i=1..n
 		std::vector<matrix> P(n + 1);
@@ -367,7 +370,7 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 
 		int f_calls = 0;
 		auto f = [&](const matrix& X) -> double {
-			ud2(0, 0) = f_calls;
+			ud2(0, 0) = pen_c;
 			matrix Y = ff(X, ud1, ud2);
 			++f_calls;
 			return -Y(0, 0);
@@ -473,6 +476,8 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 				if (d > max_dist) max_dist = d;
 			}
 			if (max_dist < epsilon) break;
+			pen_c *= pen_alpha; // increase penalty parameter
+			it++;
 		}
 
 		// return best found point
@@ -481,7 +486,7 @@ solution sym_NM(matrix(*ff)(matrix, matrix, matrix), matrix x0, double s, double
 
 		Xopt.x = P[best];
 		Xopt.y = ff(Xopt.x, ud1, ud2);
-		Xopt.f_calls = f_calls;
+		Xopt.f_calls = it;
 		Xopt.flag = 0; // local minimum
 		Xopt.ud(0, 0) = std::sqrt(Xopt.x(0, 0) * Xopt.x(0, 0) + Xopt.x(1, 0) * Xopt.x(1, 0));
 		return Xopt;
