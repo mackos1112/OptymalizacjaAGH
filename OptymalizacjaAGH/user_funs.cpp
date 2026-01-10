@@ -264,8 +264,8 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 
 	double Dx = C * ro * S * vx * abs(vx) / 2.0; //sila oporu w poziomie
 	double Dy = C * ro * S * vy * abs(vy) / 2.0; //sila oporu w pionie
-	double FMx;// = ro * vx * omega * MATH_PI * r * r * r; //sila Magnusa w poziomie
-	double FMy; //= ro * vy * omega * MATH_PI * r * r * r; //sila Magnusa w pionie
+	double FMx = ro * vy * omega * MATH_PI * r * r * r; //sila Magnusa w poziomie
+	double FMy = ro * vx * omega * MATH_PI * r * r * r; //sila Magnusa w pionie
 
 	//symulacja lotu
 
@@ -273,11 +273,11 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 		//aktualizacja sil oporu i Magnusa
 		Dx = C * ro * S * vx * abs(vx) / 2.0;
 		Dy = C * ro * S * vy * abs(vy) / 2.0;
-		FMx = ro * vx * omega * MATH_PI * r * r * r;
-		FMy = ro * vy * omega * MATH_PI * r * r * r;
+		FMx = ro * vy * omega * MATH_PI * r * r * r;
+		FMy = ro * vx * omega * MATH_PI * r * r * r;
 
-		double ax = (-Dx + FMx) / m; //przyspieszenie w poziomie
-		double ay = (-m * g - Dy + FMy) / m; //przyspieszenie w pionie
+		double ax = (-Dx - FMx) / m; //przyspieszenie w poziomie
+		double ay = (-m * g - Dy - FMy) / m; //przyspieszenie w pionie
 		//cout << ax << ", " << ay << endl;
 		vx += ax * dt;
 		vy += ay * dt;
@@ -285,7 +285,7 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 		Y += vy * dt;
 		
 		if (Y <= 0.0) break; //pilnowanie ladowania na ziemi
-		cout << X << "," << Y << endl;
+		cout << t << ", " << X << "," << Y << endl;
 	}
 	xend(0) = X; //odleglosc w poziomie
 
