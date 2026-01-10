@@ -1,5 +1,2 @@
-﻿  main.cpp
-C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(79,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(232,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(292,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+﻿  user_funs.cpp
   OptymalizacjaAGH.vcxproj -> C:\Users\User\source\repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
