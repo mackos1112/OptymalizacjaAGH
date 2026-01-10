@@ -300,9 +300,9 @@ matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
 		}
 
 		
-		cout << t << ";" << X << ";" << Y << endl;
+		//cout << t << ";" << X << ";" << Y << endl;
 	}
-	cout << "Koniec symulacji. x_end: " << X << ", y_end: " << Y << ", odleglosc od kosza: " << odleglosc << endl;
+	//cout << "Koniec symulacji. x_end: " << X << ", y_end: " << Y << ", odleglosc od kosza: " << odleglosc << endl;
 	// Definicja ograniczeń g(x) <= 0 [cite: 67, 68]
 	double g1 = odleglosc - R; // max 2m od (5,50)
 	double g2 = v0x - 10.0;               // v0x <= 10

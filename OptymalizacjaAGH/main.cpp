@@ -24,8 +24,8 @@ int main()
 	try
 	{
 		//TODO: lab 2 symulacja
-		//lab2();
-		ff_ball(matrix(2, new double[2] {-0.0375986, 9.93978}), matrix(1, new double[1] {0.1}), matrix(1, new double[1] {1}));
+		lab2();
+		//ff_ball(matrix(2, new double[2] {-0.0375986, 9.93978}), matrix(1, new double[1] {0.1}), matrix(1, new double[1] {1}));
 		
 		//TODO: lab 3 symulacja
 		//lab3();
@@ -259,8 +259,8 @@ void lab2()
 			xin(0, 0) = x1;
 			xin(1, 0) = x2;
 			
-			solution val = sym_NM(ff2T, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);
-			//Sout << x1 << ";" << x2 << ";" << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << val.ud(0) << ";" << m2d(val.y) << ";" << val.f_calls << "\n";
+			solution val = sym_NM(ff2T, xin, s, alpha, beta, gamma, delta, epsilon, Nmax, ud1, ud2);		
+			Sout << x1 << ";" << x2 << ";" << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << val.ud(0) << ";" << m2d(val.y) << ";" << val.f_calls << "\n";
 		}
 	}
 	Sout.close();
