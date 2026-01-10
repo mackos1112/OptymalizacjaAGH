@@ -239,7 +239,59 @@ matrix ff2T(matrix x, matrix ud1, matrix ud2)
     return matrix(f);
 }
 
+matrix ff_ball(matrix x, matrix ud1, matrix ud2) {
+	matrix xend;	//wynik funkcji celu - odleglosc w poziomie
 
+	//parametry
+	double g = 9.81;      //m/s^2
+	double m = 0.6;    //kg
+	double r = 0.12;     //m
+	double Y = 100.0;   //m
+	double X = 0.0;    //m
+	double C = 0.47;  //wspolczynnik oporu
+	double ro = 1.2; //gestosc powietrza kg/m^3
+	double S = MATH_PI * r * r; //pole przekroju poprzecznego
+	double dt = 0.01; //s
+	double tend = 7.0; //s
+
+	//zmienne decyzyjne
+	double v0x = m2d(x(0, 0));      //predkosc poczatkowa m/s [-10, 10] m/s
+	double omega = m2d(x(1, 0));    //predkosc obrotowa radiany	[-10, 10] rad/s
+	//cout << "v0x: " << v0x << ", omega: " << omega << endl;
+
+	double vx = v0x;  //poczatkowa predkosc w poziomie
+	double vy = 0; //predkosc w pionie
+
+	double Dx = C * ro * S * vx * abs(vx) / 2.0; //sila oporu w poziomie
+	double Dy = C * ro * S * vy * abs(vy) / 2.0; //sila oporu w pionie
+	double FMx;// = ro * vx * omega * MATH_PI * r * r * r; //sila Magnusa w poziomie
+	double FMy; //= ro * vy * omega * MATH_PI * r * r * r; //sila Magnusa w pionie
+
+	//symulacja lotu
+
+	for (double t = 0; t <= tend; t += dt) {
+		//aktualizacja sil oporu i Magnusa
+		Dx = C * ro * S * vx * abs(vx) / 2.0;
+		Dy = C * ro * S * vy * abs(vy) / 2.0;
+		FMx = ro * vx * omega * MATH_PI * r * r * r;
+		FMy = ro * vy * omega * MATH_PI * r * r * r;
+
+		double ax = (-Dx + FMx) / m; //przyspieszenie w poziomie
+		double ay = (-m * g - Dy + FMy) / m; //przyspieszenie w pionie
+		//cout << ax << ", " << ay << endl;
+		vx += ax * dt;
+		vy += ay * dt;
+		X += vx * dt;
+		Y += vy * dt;
+		
+		if (Y <= 0.0) break; //pilnowanie ladowania na ziemi
+		cout << X << "," << Y << endl;
+	}
+	xend(0) = X; //odleglosc w poziomie
+
+	return xend;
+
+}
 
 matrix ff3T(matrix x1, matrix ud1, matrix ud2)
 {

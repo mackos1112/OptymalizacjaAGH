@@ -8,6 +8,7 @@ matrix df0(double, matrix, matrix = NAN, matrix = NAN);
 
 matrix ff1T(matrix, matrix = NAN, matrix = NAN);
 matrix ff2T(matrix x1, matrix x2, matrix ud1);
+matrix ff_ball(matrix, matrix = NAN, matrix = NAN);
 matrix ff3T(matrix x1, matrix x2, matrix ud1);
 
 // Problem rzeczywisty - zbiorniki wody

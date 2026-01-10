@@ -25,9 +25,15 @@ int main()
 	{
 		//TODO: lab 2 symulacja
 		//lab2();
+		matrix test(2,1);
+		test(0, 0) = 5.0; //predkosc poczatkowa
+		test(1, 0) = 10.0;  //kat wyrzutu
 
-		//TODO: lab 3 testowa funkcja celu, symulacja
-		lab3();
+		matrix ud1, ud2;
+		cout << ff_ball(test, ud1, ud2);
+
+		//TODO: lab 3 symulacja
+		//lab3();
 	}
 	catch (string EX_INFO)
 	{
@@ -263,6 +269,11 @@ void lab2()
 		}
 	}
 	Sout.close();
+
+	//========= Problem rzeczywisty - optymalizacja DA z ograniczeniami - rzut pilka ==========
+	cout << "\n=== Problem rzeczywisty - optymalizacja DA z ograniczeniami - rzut pilka ===\n" << endl;
+	solution::clear_calls();
+	// Parametry optymalizacji
 }
 
 void lab3()
@@ -302,6 +313,8 @@ void lab3()
 		}
 	}
 	Sout.close();
+
+
 }
 
 void lab4()
