@@ -23,12 +23,21 @@ int main()
 {
 	try
 	{
-		//TODO: lab 2 symulacja
-		lab2();
+
+		//lab2();
 		//ff_ball(matrix(2, new double[2] {-0.0375986, 9.93978}), matrix(1, new double[1] {0.1}), matrix(1, new double[1] {1}));
 		
 		//TODO: lab 3 symulacja
-		//lab3();
+		//problemem jest to że funkcja celu jest niedeterministyczna tzn
+		// co znaczy że jesteśmy blisko użytych w eksperymencie b1 i b2,
+		//no właśnie to znaczy tyle że nasz wykres x1 x2 i ten z doświadczenia są podobne/nakładają się
+		//na siebie
+		//i jak tu policzyć które b1 i b2 było najlepsze, to jest niedeterministyczny problem właśnie
+
+
+		lab3();
+
+
 	}
 	catch (string EX_INFO)
 	{
@@ -314,9 +323,9 @@ void lab3()
 	double epsilon = 1e-4; // dokladnosc dla metod lokalnych
 	int N = 2; //liczba zmiennych decyzyjnych, czyli x1 i x2
 	int mi, lambda; //liczebnosc bazowa i tymczasowa, gdy duzo minimumow to zwiekszamy lambda
-	mi = 50;
-	lambda = 100;
-	int Nmax = 100000;
+	mi = 20;
+	lambda = 40;
+	int Nmax = 1000;
 	//przedzial poszukiwan [{-5,-5},{5,5}]
 	matrix lb(N, 1), ub(N, 1);
 	for (int i = 0; i < N; ++i) {
@@ -331,7 +340,7 @@ void lab3()
 	matrix(1, 1, 10.0),
 	matrix(1, 1, 100.0)
 	};
-	//matrix sigmatemp = 1;
+	matrix sigmatemp = 1;
 	std::srand(std::time(0));
 	ofstream Sout("EA_lab3.csv");// definiujemy strumien do pliku .csv
 	for (int i = 0; i < 5; i++)
@@ -345,8 +354,31 @@ void lab3()
 		}
 	}
 	Sout.close();
+	
+	//========= Problem rzeczywisty  ==========
+	ifstream Sin("polozenia.txt");
+	if (!Sin.is_open()) {
+		std::cerr << "Nie można otworzyć pliku\n";
+		return;
+	}
+	matrix polozenia(1001, 2);
+	//wczytanie danych z pliku
+	string line;
+	int i_line = 0;
+	while (getline(Sin, line)) {
+		std::stringstream ss(line);
+		std::string x, y;
 
-
+		if (getline(ss, x, ';') && getline(ss, y)) {
+			double a = stod(x);
+			double b = stod(y);
+			polozenia(i_line, 0) = a;
+			polozenia(i_line, 1) = b;
+		}
+		i_line++;
+	}
+	Sin.close();
+	
 }
 
 void lab4()

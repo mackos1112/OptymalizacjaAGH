@@ -1,6 +1,7 @@
 #include"user_funs.h"
 #include <cmath>
 
+
 #define MATH_PI 3.1415926
 
 matrix ff0T(matrix x, matrix ud1, matrix ud2)				// funkcja celu dla przypadku testowego
@@ -332,4 +333,23 @@ matrix ff3T(matrix x1, matrix ud1, matrix ud2)
 	matrix y;
 	y = pow(x1(0), 2) + pow(x1(1), 2) - cos(2.5 * MATH_PI * x1(0)) - cos(2.5 * MATH_PI * x1(1)) + 2;
 	return y;
+}
+matrix ff3R(matrix x1, matrix ud1, matrix ud2)
+{
+	matrix solution;
+	double m1 = 1.0; // kg, masa pierwszego ciezarka
+	double m2 = 2.0; // kg, masa drugiego ciezarka
+	double k1 = 4.0; // N/m, wspolczynnik sprezystosci pierwszej sprezyny
+	double k2 = 6.0; // N/m, wspolczynnik sprezystosci drugiej sprezyny
+	double F = 5.0; // N, sila zewnetrzna dzialajaca na drugi ciezarek
+	double maxtime = 100.0; // s, czas symulacji
+	double dt = 0.1; // s, krok czasowy
+
+	//Szukane wspolczynniki
+	double b1, b2; // opor ruchu ciezarkow
+	b1 = m2d(x1(0, 0));
+	b2 = m2d(x1(1, 0));
+
+
+	return solution;
 }
