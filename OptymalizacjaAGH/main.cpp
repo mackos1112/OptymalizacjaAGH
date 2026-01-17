@@ -28,11 +28,7 @@ int main()
 		//ff_ball(matrix(2, new double[2] {-0.0375986, 9.93978}), matrix(1, new double[1] {0.1}), matrix(1, new double[1] {1}));
 		
 		//TODO: lab 3 symulacja
-		//problemem jest to że funkcja celu jest niedeterministyczna tzn
-		// co znaczy że jesteśmy blisko użytych w eksperymencie b1 i b2,
-		//no właśnie to znaczy tyle że nasz wykres x1 x2 i ten z doświadczenia są podobne/nakładają się
-		//na siebie
-		//i jak tu policzyć które b1 i b2 było najlepsze, to jest niedeterministyczny problem właśnie
+		//jutro nad tym siądę
 
 
 		lab3();
@@ -319,7 +315,7 @@ void lab2()
 
 void lab3()
 {
-	matrix ud1, ud2;   // macierze pomocnicze
+	matrix ud1, ud2(4, 1);   // macierze pomocnicze
 	double epsilon = 1e-4; // dokladnosc dla metod lokalnych
 	int N = 2; //liczba zmiennych decyzyjnych, czyli x1 i x2
 	int mi, lambda; //liczebnosc bazowa i tymczasowa, gdy duzo minimumow to zwiekszamy lambda
@@ -342,18 +338,18 @@ void lab3()
 	};
 	matrix sigmatemp = 1;
 	std::srand(std::time(0));
-	ofstream Sout("EA_lab3.csv");// definiujemy strumien do pliku .csv
-	for (int i = 0; i < 5; i++)
-	{
+	//ofstream Sout("EA_lab3.csv");// definiujemy strumien do pliku .csv
+	//for (int i = 0; i < 5; i++)
+	//{
 
-		for (int j = 0; j < 100; j++)
-		{
-			matrix sigmatemp = sigma0[i];
-			solution val = EA(ff3T, N, lb, ub, mi, lambda, sigmatemp, epsilon, Nmax, ud1, ud2);
-			Sout << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << m2d(val.y) << ";" << val.f_calls << ";" << val.flag << "\n";
-		}
-	}
-	Sout.close();
+	//	for (int j = 0; j < 100; j++)
+	//	{
+	//		matrix sigmatemp = sigma0[i];
+	//		solution val = EA(ff3T, N, lb, ub, mi, lambda, sigmatemp, epsilon, Nmax, ud1, ud2);
+	//		Sout << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << m2d(val.y) << ";" << val.f_calls << ";" << val.flag << "\n";
+	//	}
+	//}
+	//Sout.close();
 	
 	//========= Problem rzeczywisty  ==========
 	ifstream Sin("polozenia.txt");
@@ -379,6 +375,60 @@ void lab3()
 	}
 	Sin.close();
 	
+	double m1 = 1.0; // kg, masa pierwszego ciezarka
+	double m2 = 2.0; // kg, masa drugiego ciezarka
+	double k1 = 4.0; // N/m, wspolczynnik sprezystosci pierwszej sprezyny
+	double k2 = 6.0; // N/m, wspolczynnik sprezystosci drugiej sprezyny
+	double F = 5.0; // N, sila zewnetrzna dzialajaca na drugi ciezarek
+	double maxtime = 100.0; // s, czas symulacji
+	double dt = 0.1; // s, krok czasowy
+	matrix x1(2, 1);
+	x1(0, 0) = 2;
+	x1(1, 0) = 3;
+	matrix dane(9, 1);
+	matrix Y0(4, 1);
+	Y0(0, 0) = 0.0;  // x1
+	Y0(1, 0) = 0.0;  // v1
+	Y0(2, 0) = 0.0;  // x2
+	Y0(3, 0) = 0.0;  // v2
+	dane(0, 0) = m1;
+	dane(1, 0) = m2;
+	dane(2, 0) = k1;
+	dane(3, 0) = k2;
+	dane(4, 0) = maxtime;
+	dane(5, 0) = dt;
+	dane(6, 0) = 1.5;
+	dane(7, 0) = 1.5; // tutaj dane do optymalizacji
+	dane(8, 0) = F;
+
+	for (int i = 0; i < N; ++i) {
+		lb(i, 0) = 0.1;
+		ub(i, 0) = 3.0;
+	}
+	//solution val = EA(ff3R, N, lb, ub, mi, lambda, sigma0[0], epsilon, Nmax, ud1, ud2);
+
+	//matrix* S = solve_ode(ff3R_sym, 0.0, dt, maxtime, Y0, dane, polozenia);
+	//ff3R(x1, dane, polozenia);
+
+
+	matrix* S = solve_ode(ff3R_sym, 0.0, dane(5, 0), dane(4, 0), Y0, dane, ud2);
+	 N = maxtime / dt;
+	double sum = 0.0;
+	for (int i = 0; i < N; i++) {
+		double d1 = abs(S[1](i, 0) - dane(i, 0));
+		cout << S[1](i, 0) << "; " << S[1](i, 1) << "; " << S[1](i, 2) << "; " << S[1](i, 3) << endl;
+		double d2 = abs(S[1](i, 1) - dane(i, 1));
+		sum += d1 + d2;
+	}
+
+
+	/*ofstream SRout("ff3R.csv");
+	for (int i = 0; i < N; i++)
+	{
+		SRout << S[1](i, 0) << ";" << S[1](i, 2) << "\n";
+	}
+	SRout.close();*/
+	//delete[] S;
 }
 
 void lab4()

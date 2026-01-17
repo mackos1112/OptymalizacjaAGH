@@ -1,1 +1,6 @@
-﻿  OptymalizacjaAGH.vcxproj -> C:\Users\User\source\repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe
+﻿  main.cpp
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(89,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(242,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(344,22): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\User\source\repos\OptymalizacjaAGH\OptymalizacjaAGH\main.cpp(419,15): warning C4244: "=": konwersja z "double" do "int", możliwa utrata danych
+  OptymalizacjaAGH.vcxproj -> C:\Users\User\source\repos\OptymalizacjaAGH\x64\Debug\OptymalizacjaAGH.exe

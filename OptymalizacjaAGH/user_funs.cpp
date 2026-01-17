@@ -334,22 +334,52 @@ matrix ff3T(matrix x1, matrix ud1, matrix ud2)
 	y = pow(x1(0), 2) + pow(x1(1), 2) - cos(2.5 * MATH_PI * x1(0)) - cos(2.5 * MATH_PI * x1(1)) + 2;
 	return y;
 }
+matrix ff3R_sym(double t, matrix Y, matrix ud1, matrix ud2)
+{
+	matrix dY(4, 1);
+
+	double x1 = Y(0);
+	double v1 = Y(1);
+	double x2 = Y(2);
+	double v2 = Y(3);
+
+	double m1 = ud1(0, 0);
+	double m2 = ud1(1, 0);
+	double k1 = ud1(2, 0);
+	double k2 = ud1(3, 0);
+	double b1 = ud2(0, 0);
+	double b2 = ud2(1, 0);
+
+	double F = ud2(2, 0);
+
+	dY(0, 0) = v1;
+	dY(1, 0) = (-b1 * v1 - b2 * (v1 - v2) - k1 * x1 - k2 * (x1 - x2)) / m1;
+	dY(2, 0) = v2;
+	dY(3, 0) = (b2 * (v1 - v2) + k2 * (x1 - x2) + F) / m2;
+
+	return dY;
+}
 matrix ff3R(matrix x1, matrix ud1, matrix ud2)
 {
-	matrix solution;
-	double m1 = 1.0; // kg, masa pierwszego ciezarka
-	double m2 = 2.0; // kg, masa drugiego ciezarka
-	double k1 = 4.0; // N/m, wspolczynnik sprezystosci pierwszej sprezyny
-	double k2 = 6.0; // N/m, wspolczynnik sprezystosci drugiej sprezyny
-	double F = 5.0; // N, sila zewnetrzna dzialajaca na drugi ciezarek
-	double maxtime = 100.0; // s, czas symulacji
-	double dt = 0.1; // s, krok czasowy
-
-	//Szukane wspolczynniki
-	double b1, b2; // opor ruchu ciezarkow
-	b1 = m2d(x1(0, 0));
-	b2 = m2d(x1(1, 0));
-
-
-	return solution;
+	matrix y;
+	ud1(6, 0) = x1(0, 0);
+	ud1(7, 0) = x1(1, 0);
+	matrix Y0(4, 1);
+	Y0(0, 0) = 0.0;  // x1
+	Y0(1, 0) = 0.0;  // v1
+	Y0(2, 0) = 0.0;  // x2
+	Y0(3, 0) = 0.0;  // v2
+	matrix ud3(4, 1);
+	cout << ud1(6, 0) << endl;
+	matrix* S = solve_ode(ff3R_sym, 0.0, ud1(5, 0), ud1(4, 0), Y0, ud1, ud3);
+	int N = ud1(4, 0) / ud1(5, 0);
+	double sum = 0.0;
+	for (int i = 0; i < N; i++) {
+		double d1 = abs(S[1](i, 0) - ud2(i, 0));
+		cout << S[1](i, 0) << "; " << S[1](i, 1) << "; " << S[1](i, 2) << "; " << S[1](i, 3) << endl;
+		double d2 = abs(S[1](i, 1) - ud2(i, 1));
+		sum += d1 + d2;
+	}
+	cout << sum;
+	return y;
 }
