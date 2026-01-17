@@ -27,10 +27,6 @@ int main()
 		//lab2();
 		//ff_ball(matrix(2, new double[2] {-0.0375986, 9.93978}), matrix(1, new double[1] {0.1}), matrix(1, new double[1] {1}));
 		
-		//TODO: lab 3 symulacja
-		//jutro nad tym siądę
-
-
 		lab3();
 
 
@@ -319,9 +315,9 @@ void lab3()
 	double epsilon = 1e-4; // dokladnosc dla metod lokalnych
 	int N = 2; //liczba zmiennych decyzyjnych, czyli x1 i x2
 	int mi, lambda; //liczebnosc bazowa i tymczasowa, gdy duzo minimumow to zwiekszamy lambda
-	mi = 20;
-	lambda = 40;
-	int Nmax = 1000;
+	mi = 40;
+	lambda = 80;
+	int Nmax = 20000;
 	//przedzial poszukiwan [{-5,-5},{5,5}]
 	matrix lb(N, 1), ub(N, 1);
 	for (int i = 0; i < N; ++i) {
@@ -338,18 +334,18 @@ void lab3()
 	};
 	matrix sigmatemp = 1;
 	std::srand(std::time(0));
-	//ofstream Sout("EA_lab3.csv");// definiujemy strumien do pliku .csv
-	//for (int i = 0; i < 5; i++)
-	//{
+	ofstream Sout("EA_lab3.csv");// definiujemy strumien do pliku .csv
+	for (int i = 0; i < 5; i++)
+	{
 
-	//	for (int j = 0; j < 100; j++)
-	//	{
-	//		matrix sigmatemp = sigma0[i];
-	//		solution val = EA(ff3T, N, lb, ub, mi, lambda, sigmatemp, epsilon, Nmax, ud1, ud2);
-	//		Sout << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << m2d(val.y) << ";" << val.f_calls << ";" << val.flag << "\n";
-	//	}
-	//}
-	//Sout.close();
+		for (int j = 0; j < 100; j++)
+		{
+			matrix sigmatemp = sigma0[i];
+			solution val = EA(ff3T, N, lb, ub, mi, lambda, sigmatemp, epsilon, Nmax, ud1, ud2);
+			Sout << m2d(val.x(0)) << ";" << m2d(val.x(1)) << ";" << m2d(val.y) << ";" << val.f_calls << ";" << val.flag << "\n";
+		}
+	}
+	Sout.close();
 	
 	//========= Problem rzeczywisty  ==========
 	ifstream Sin("polozenia.txt");
@@ -383,8 +379,8 @@ void lab3()
 	double maxtime = 100.0; // s, czas symulacji
 	double dt = 0.1; // s, krok czasowy
 	matrix x1(2, 1);
-	x1(0, 0) = 2;
-	x1(1, 0) = 3;
+	x1(0, 0) = 0.750001; //tych danych szukamy
+	x1(1, 0) = 1.25;//tych danych szukamy
 	matrix dane(9, 1);
 	matrix Y0(4, 1);
 	Y0(0, 0) = 0.0;  // x1
@@ -397,38 +393,20 @@ void lab3()
 	dane(3, 0) = k2;
 	dane(4, 0) = maxtime;
 	dane(5, 0) = dt;
-	dane(6, 0) = 1.5;
-	dane(7, 0) = 1.5; // tutaj dane do optymalizacji
+	dane(6, 0) = 2;
+	dane(7, 0) = 3; 
 	dane(8, 0) = F;
 
 	for (int i = 0; i < N; ++i) {
 		lb(i, 0) = 0.1;
 		ub(i, 0) = 3.0;
 	}
-	//solution val = EA(ff3R, N, lb, ub, mi, lambda, sigma0[0], epsilon, Nmax, ud1, ud2);
+	solution val = EA(ff3R, N, lb, ub, mi, lambda, sigma0[1], epsilon, Nmax, dane, polozenia);
 
-	//matrix* S = solve_ode(ff3R_sym, 0.0, dt, maxtime, Y0, dane, polozenia);
-	//ff3R(x1, dane, polozenia);
+	cout << "Optymalne parametry DA i DB: " << m2d(val.x(0)) << ", " << m2d(val.x(1)) << ", " <<  m2d(val.y) << ", " << val.f_calls << "\n";
+	ff3R(val.x, dane, polozenia);
 
-
-	matrix* S = solve_ode(ff3R_sym, 0.0, dane(5, 0), dane(4, 0), Y0, dane, ud2);
-	 N = maxtime / dt;
-	double sum = 0.0;
-	for (int i = 0; i < N; i++) {
-		double d1 = abs(S[1](i, 0) - dane(i, 0));
-		cout << S[1](i, 0) << "; " << S[1](i, 1) << "; " << S[1](i, 2) << "; " << S[1](i, 3) << endl;
-		double d2 = abs(S[1](i, 1) - dane(i, 1));
-		sum += d1 + d2;
-	}
-
-
-	/*ofstream SRout("ff3R.csv");
-	for (int i = 0; i < N; i++)
-	{
-		SRout << S[1](i, 0) << ";" << S[1](i, 2) << "\n";
-	}
-	SRout.close();*/
-	//delete[] S;
+	//cout << ff3R(x1, dane, polozenia);
 }
 
 void lab4()

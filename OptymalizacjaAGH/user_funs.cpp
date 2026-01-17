@@ -347,10 +347,9 @@ matrix ff3R_sym(double t, matrix Y, matrix ud1, matrix ud2)
 	double m2 = ud1(1, 0);
 	double k1 = ud1(2, 0);
 	double k2 = ud1(3, 0);
-	double b1 = ud2(0, 0);
-	double b2 = ud2(1, 0);
-
-	double F = ud2(2, 0);
+	double b1 = ud1(6, 0);
+	double b2 = ud1(7, 0);
+	double F = ud1(8, 0);
 
 	dY(0, 0) = v1;
 	dY(1, 0) = (-b1 * v1 - b2 * (v1 - v2) - k1 * x1 - k2 * (x1 - x2)) / m1;
@@ -362,24 +361,37 @@ matrix ff3R_sym(double t, matrix Y, matrix ud1, matrix ud2)
 matrix ff3R(matrix x1, matrix ud1, matrix ud2)
 {
 	matrix y;
-	ud1(6, 0) = x1(0, 0);
-	ud1(7, 0) = x1(1, 0);
 	matrix Y0(4, 1);
 	Y0(0, 0) = 0.0;  // x1
 	Y0(1, 0) = 0.0;  // v1
 	Y0(2, 0) = 0.0;  // x2
 	Y0(3, 0) = 0.0;  // v2
-	matrix ud3(4, 1);
-	cout << ud1(6, 0) << endl;
-	matrix* S = solve_ode(ff3R_sym, 0.0, ud1(5, 0), ud1(4, 0), Y0, ud1, ud3);
+	matrix dane(9, 1);
+	dane(0, 0) = ud1(0, 0); //m1
+	dane(1, 0) = ud1(1, 0); //m2
+	dane(2, 0) = ud1(2, 0); //k1
+	dane(3, 0) = ud1(3, 0); //k2
+	dane(4, 0) = ud1(4, 0); //maxtime
+	dane(5, 0) = ud1(5, 0); //dt
+	dane(6, 0) = x1(0); //DA
+	dane(7, 0) = x1(1); //DB
+	dane(8, 0) = ud1(8, 0); //F
+	matrix* S = solve_ode(ff3R_sym, 0.0, ud1(5, 0), ud1(4, 0), Y0, dane, ud2);
 	int N = ud1(4, 0) / ud1(5, 0);
 	double sum = 0.0;
 	for (int i = 0; i < N; i++) {
 		double d1 = abs(S[1](i, 0) - ud2(i, 0));
-		cout << S[1](i, 0) << "; " << S[1](i, 1) << "; " << S[1](i, 2) << "; " << S[1](i, 3) << endl;
-		double d2 = abs(S[1](i, 1) - ud2(i, 1));
+		double d2 = abs(S[1](i, 2) - ud2(i, 1));
 		sum += d1 + d2;
 	}
-	cout << sum;
+	ofstream SRout("ff3R.csv");
+	for (int i = 0; i < N; i++)
+	{
+		SRout << S[1](i, 0) << ";" << S[1](i, 2) << "\n";
+	}
+	SRout.close();
+
+	y = sum;
+	delete[] S;
 	return y;
 }
