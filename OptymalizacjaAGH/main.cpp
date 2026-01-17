@@ -23,12 +23,13 @@ int main()
 {
 	try
 	{
-		//TODO: lab 2 symulacja
-		lab2();
+
+		//lab2();
 		//ff_ball(matrix(2, new double[2] {-0.0375986, 9.93978}), matrix(1, new double[1] {0.1}), matrix(1, new double[1] {1}));
 		
-		//TODO: lab 3 symulacja
-		//lab3();
+		lab3();
+
+
 	}
 	catch (string EX_INFO)
 	{
@@ -310,13 +311,13 @@ void lab2()
 
 void lab3()
 {
-	matrix ud1, ud2;   // macierze pomocnicze
+	matrix ud1, ud2(4, 1);   // macierze pomocnicze
 	double epsilon = 1e-4; // dokladnosc dla metod lokalnych
 	int N = 2; //liczba zmiennych decyzyjnych, czyli x1 i x2
 	int mi, lambda; //liczebnosc bazowa i tymczasowa, gdy duzo minimumow to zwiekszamy lambda
-	mi = 50;
-	lambda = 100;
-	int Nmax = 100000;
+	mi = 40;
+	lambda = 80;
+	int Nmax = 20000;
 	//przedzial poszukiwan [{-5,-5},{5,5}]
 	matrix lb(N, 1), ub(N, 1);
 	for (int i = 0; i < N; ++i) {
@@ -331,7 +332,7 @@ void lab3()
 	matrix(1, 1, 10.0),
 	matrix(1, 1, 100.0)
 	};
-	//matrix sigmatemp = 1;
+	matrix sigmatemp = 1;
 	std::srand(std::time(0));
 	ofstream Sout("EA_lab3.csv");// definiujemy strumien do pliku .csv
 	for (int i = 0; i < 5; i++)
@@ -345,8 +346,67 @@ void lab3()
 		}
 	}
 	Sout.close();
+	
+	//========= Problem rzeczywisty  ==========
+	ifstream Sin("polozenia.txt");
+	if (!Sin.is_open()) {
+		std::cerr << "Nie można otworzyć pliku\n";
+		return;
+	}
+	matrix polozenia(1001, 2);
+	//wczytanie danych z pliku
+	string line;
+	int i_line = 0;
+	while (getline(Sin, line)) {
+		std::stringstream ss(line);
+		std::string x, y;
 
+		if (getline(ss, x, ';') && getline(ss, y)) {
+			double a = stod(x);
+			double b = stod(y);
+			polozenia(i_line, 0) = a;
+			polozenia(i_line, 1) = b;
+		}
+		i_line++;
+	}
+	Sin.close();
+	
+	double m1 = 1.0; // kg, masa pierwszego ciezarka
+	double m2 = 2.0; // kg, masa drugiego ciezarka
+	double k1 = 4.0; // N/m, wspolczynnik sprezystosci pierwszej sprezyny
+	double k2 = 6.0; // N/m, wspolczynnik sprezystosci drugiej sprezyny
+	double F = 5.0; // N, sila zewnetrzna dzialajaca na drugi ciezarek
+	double maxtime = 100.0; // s, czas symulacji
+	double dt = 0.1; // s, krok czasowy
+	matrix x1(2, 1);
+	x1(0, 0) = 0.750001; //tych danych szukamy
+	x1(1, 0) = 1.25;//tych danych szukamy
+	matrix dane(9, 1);
+	matrix Y0(4, 1);
+	Y0(0, 0) = 0.0;  // x1
+	Y0(1, 0) = 0.0;  // v1
+	Y0(2, 0) = 0.0;  // x2
+	Y0(3, 0) = 0.0;  // v2
+	dane(0, 0) = m1;
+	dane(1, 0) = m2;
+	dane(2, 0) = k1;
+	dane(3, 0) = k2;
+	dane(4, 0) = maxtime;
+	dane(5, 0) = dt;
+	dane(6, 0) = 2;
+	dane(7, 0) = 3; 
+	dane(8, 0) = F;
 
+	for (int i = 0; i < N; ++i) {
+		lb(i, 0) = 0.1;
+		ub(i, 0) = 3.0;
+	}
+	solution val = EA(ff3R, N, lb, ub, mi, lambda, sigma0[1], epsilon, Nmax, dane, polozenia);
+
+	cout << "Optymalne parametry DA i DB: " << m2d(val.x(0)) << ", " << m2d(val.x(1)) << ", " <<  m2d(val.y) << ", " << val.f_calls << "\n";
+	ff3R(val.x, dane, polozenia);
+
+	//cout << ff3R(x1, dane, polozenia);
 }
 
 void lab4()
